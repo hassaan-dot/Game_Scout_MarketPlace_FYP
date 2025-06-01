@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 
-import { DisplayContent } from '../../Components/index';
+import { DisplayContent } from "../../Components/index";
+import InformationContainer from "../../Components/userDetails/component";
 // import { useStateContext } from '../context'
 
 const Profile = () => {
@@ -21,12 +22,15 @@ const Profile = () => {
   // }, [address, contract]);
 
   return (
-    <DisplayContent 
-      title="All Posts"
-      isLoading={isLoading}
-      campaigns={campaigns}
-    />
-  )
-}
+    <>
+      <InformationContainer />
+      <DisplayContent
+        title="All Posts"
+        isLoading={isLoading}
+        campaigns={campaigns}
+      />
+    </>
+  );
+};
 
-export default Profile
+export default Profile;

@@ -1,6 +1,6 @@
 import express from "express";
 import axios from "axios";
-import { MongoClient } from "mongodb"; // Make sure to import MongoClient
+import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -25,18 +25,6 @@ async function connectToMongo() {
 }
 connectToMongo();
 
-// router.get("/data", async (req, res) => {
-//   try {
-//     if (!collection) {
-//       return res.status(500).json({ error: "Database not connected" });
-//     }
-//     const data = await collection.find({}).toArray();
-//     res.json(data);
-//   } catch (err) {
-//     console.error("❌ Failed to fetch data:", err);
-//     res.status(500).json({ error: "Failed to fetch data" });
-//   }
-// });
 router.post("/data/:page", async (req, res) => {
   try {
     if (!collection) {
@@ -69,8 +57,6 @@ router.post("/data/:page", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch paginated data" });
   }
 });
-
-// Start the server
 
 router.post("/chatBot", async (req, res) => {
   try {

@@ -96,7 +96,7 @@ const Home = () => {
   };
   return (
     <>
-      {allData && allData.totalPages > 1 && (
+      {allData && allData.totalPages > 1 && !isPending && (
         <Pagination
           onPageChange={onPageChangeFunction}
           currentPage={allData?.currentPage}
@@ -108,7 +108,7 @@ const Home = () => {
           <ClipLoader color="#ccc" size={60} />
         </div>
       ) : (
-        <div className="flex flex-wrap gap-6">
+        <div className="flex flex-wrap gap-6 mt-10">
           {allData && allData.data.length > 0 ? (
             allData.data.map((product) => (
               <ContentCard key={product.id} content={product} />

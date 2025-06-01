@@ -4,11 +4,11 @@ import cors from "cors";
 import multer from "multer";
 import bodyParser from "body-parser";
 import { MongoClient } from "mongodb";
-import { connectDB } from "./lib/db.js"; // Assuming you have a db.js file for MongoDB connection
-
+import { connectDB } from "./lib/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import googleLogin from "./routes/google-login.js";
+
 dotenv.config();
 
 const app = express();
@@ -31,7 +31,7 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 
-app.get("/api/auth/googlelogin", googleLogin); // ✅ Corrected Google login route
+app.get("/api/auth/googlelogin", googleLogin);
 
 app.use("/api/dashboard", dashboardRoutes);
 

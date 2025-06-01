@@ -3,7 +3,7 @@ import { Images } from "../../Resources/Images/index";
 import { useLogin, useSignup } from "../../../hooks/useLogin";
 import { useModalStore } from "../../../store/useModalStore";
 import ClipLoader from "react-spinners/ClipLoader";
-import { FiEye, FiEyeOff, FiMail } from "react-icons/fi"; // Make sure these are imported
+import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
 
 const LoginPage = () => {
   const { mutate: handleUserLogin, isPending, isPaused } = useLogin();
@@ -12,7 +12,7 @@ const LoginPage = () => {
 
   const { IsRegister, setIsRegister } = useModalStore();
 
-  const [showPassword, setShowPassword] = useState(false); // New state to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
