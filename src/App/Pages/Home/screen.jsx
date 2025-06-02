@@ -1,32 +1,29 @@
 import React, { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { ContentCard } from "../../Components/index";
-import ChatBotPopup from "../../Components/chatBotPopUp/component";
 import { icons } from "../../../assets/Icons/icons";
 import { useGetData, useSearchBar } from "../../../hooks/useDashboard";
-import { Pagination } from "../../Components/pagination/component";
 import { useModalStore } from "../../../store/useModalStore";
+import ChatBotPopup from "../../Components/chatBotPopUp/component";
+import { ContentCard } from "../../Components/index";
+import { Pagination } from "../../Components/pagination/component";
 
 const Home = () => {
   const {
     allData,
     isSearching,
-    setIsSearching,
     searchingInput,
-    searchIndex,
     setSearchIndex,
+    searchingIndex,
   } = useModalStore();
 
   const [isChatOpen, setIsChatOpen] = useState(false);
-
-  const [Index, setIndex] = useState(1);
 
   const { mutate, isPending, error } = useGetData();
 
   const { mutate: searching } = useSearchBar();
 
   useEffect(() => {
-    mutate(Index);
+    mutate(1);
   }, []);
 
   const toggleChat = () => {
@@ -35,6 +32,7 @@ const Home = () => {
 
   const onPageChangeFunction = (index) => {
     setSearchIndex(index);
+
     if (!isSearching) {
       mutate(index);
     }
@@ -42,11 +40,10 @@ const Home = () => {
       input: searchingInput,
     };
     if (isSearching) {
-      // setIsSearching(false);
       searching(data);
     }
 
-    if (error) {
+    if (error && !isPending) {
       return (
         <div className="text-red-500 text-center mt-10">
           Failed to load data.
@@ -76,7 +73,7 @@ const Home = () => {
             ))
           ) : (
             <div className="w-full text-center text-gray-500">
-              No data found.
+              No Data Found
             </div>
           )}
         </div>
