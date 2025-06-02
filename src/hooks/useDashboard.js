@@ -12,14 +12,13 @@ const handleGetData = async (index) => {
   return res.data;
 };
 
-// export const useGetData = (index) => {
-//   return useQuery({
-//     queryKey: ["data"],
-//     queryFn: () => handleGetData(),
-//   });
-// };
+const handleSearch = async (data) => {
+  const res = await api_dashboard.post(`/search/${1}`, data);
+  return res.data;
+};
+
 export const useGetData = () => {
-  const { setAiResponse, setallData } = useModalStore();
+  const { setallData } = useModalStore();
   const notify = (message) => toast(message);
   return useMutation({
     mutationKey: ["GetData"],
@@ -40,6 +39,23 @@ export const useChatBot = () => {
     mutationFn: (data) => handleChatBot(data),
     onSuccess: async (data) => {
       setAiResponse(data?.reply);
+    },
+    onError: (error) => {
+      notify(error?.response?.data?.message);
+    },
+  });
+};
+
+export const useSearchBar = () => {
+  const { setallData } = useModalStore();
+
+  const notify = (message) => toast(message);
+  return useMutation({
+    mutationKey: ["search"],
+    mutationFn: (data) => handleSearch(data),
+    onSuccess: async (data) => {
+      console.log("Search data:", data);
+      setallData(data);
     },
     onError: (error) => {
       notify(error?.response?.data?.message);

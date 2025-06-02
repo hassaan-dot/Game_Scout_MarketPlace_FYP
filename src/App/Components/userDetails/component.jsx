@@ -55,7 +55,7 @@ const InformationContainer = ({
               <p className={`text-sm text-white font-medium ${style}`}>
                 Contact Person Name
               </p>
-              <p className={`text-sm text-white-700 mt-1 ${style}`}>
+              <p className={`text-sm text-[#818183] mt-1 ${style}`}>
                 {Data?.data?.client?.contact_person_name || "N/A"}
               </p>
             </div>
@@ -64,7 +64,7 @@ const InformationContainer = ({
               <p className={`text-sm text-white font-medium ${style}`}>
                 Company Name
               </p>
-              <p className={`text-sm text-white mt-1 ${style}`}>
+              <p className={`text-sm text-[#818183] mt-1 ${style}`}>
                 {Data?.data?.client?.company_name || "N/A"}
               </p>
             </div>
@@ -73,7 +73,7 @@ const InformationContainer = ({
               <p className={`text-sm text-white font-medium ${style}`}>
                 Address
               </p>
-              <p className={`text-sm text-white mt-1 ${style}`}>
+              <p className={`text-sm text-[#818183] mt-1 ${style}`}>
                 {Data?.data?.client?.address || "N/A"}
               </p>
             </div>
@@ -82,7 +82,7 @@ const InformationContainer = ({
           <div className="flex flex-wrap gap-6">
             <div className={`flex-1 min-w-[200px]`}>
               <p className={`text-sm text-white font-medium ${style}`}>Email</p>
-              <p className={`text-sm text-white mt-1 ${style}`}>
+              <p className={`text-sm text-[#818183] mt-1 ${style}`}>
                 {Data?.data?.client?.email || email}
               </p>
             </div>
@@ -91,7 +91,7 @@ const InformationContainer = ({
               <p className={`text-sm text-white font-medium ${style}`}>
                 Phone Number
               </p>
-              <p className={`text-sm text-white mt-1 ${style}`}>
+              <p className={`text-sm text-[#818183] mt-1 ${style}`}>
                 {Data?.data?.client?.phone_number || contact}
               </p>
             </div>

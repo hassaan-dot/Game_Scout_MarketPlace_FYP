@@ -4,10 +4,10 @@ import LocalStorage from "./local-storage";
 const api = axios.create({
   baseURL: process.env.API_URL_AUTH || "http://localhost:3000/api/auth",
 });
+
 const api_dashboard = axios.create({
   baseURL:
-    process.env.REACT_APP_API_URL_DASHBOARD ||
-    "http://localhost:3000/api/dashboard",
+    process.env.API_URL_DASHBOARD || "http://localhost:3000/api/dashboard",
 });
 
 const attachTokenInterceptor = (instance) => {
