@@ -39,9 +39,10 @@ app.get("/", upload.single("avatar"), (req, res) => {
   res.send("Welcome to the API");
 });
 
-console.log("✅ MongoDB connected");
-
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   connectDB();
+});
+app.listen(5000, "0.0.0.0", () => {
+  console.log("API running on 0.0.0.0:5000");
 });
