@@ -14,6 +14,7 @@ const Home = () => {
     searchingInput,
     setSearchIndex,
     searchingIndex,
+    setIsSearching,
   } = useModalStore();
 
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -31,18 +32,19 @@ const Home = () => {
   };
 
   const onPageChangeFunction = (index) => {
-    setSearchIndex(index);
-
-    if (!isSearching) {
+    if (!isSearching && !searchingInput) {
       mutate(index);
     }
     const data = {
       input: searchingInput,
     };
-    if (isSearching) {
+    if (isSearching && searchingInput) {
       searching(data);
     }
-
+    if (isSearching && !searchingInput) {
+      setIsSearching(false);
+    }
+    setSearchIndex(index);
     if (error && !isPending) {
       return (
         <div className="text-red-500 text-center mt-10">
