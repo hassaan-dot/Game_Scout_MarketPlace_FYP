@@ -9,4 +9,13 @@ export const useModalStore = create((set) => ({
 
   allData: "",
   setallData: (allData) => set({ allData }),
+
+  isSearching: false,
+  setIsSearching: (isSearching) => set({ isSearching }),
+
+  searchIndex: 1,
+  setSearchIndex: (searchIndex) => set({ searchIndex }),
+
+  searchingInput: "",
+  setSearchingInput: (searchingInput) => set({ searchingInput }),
 }));

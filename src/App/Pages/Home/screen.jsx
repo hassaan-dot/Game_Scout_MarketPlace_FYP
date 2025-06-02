@@ -3,16 +3,27 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { ContentCard } from "../../Components/index";
 import ChatBotPopup from "../../Components/chatBotPopUp/component";
 import { icons } from "../../../assets/Icons/icons";
-import { useGetData } from "../../../hooks/useDashboard";
+import { useGetData, useSearchBar } from "../../../hooks/useDashboard";
 import { Pagination } from "../../Components/pagination/component";
 import { useModalStore } from "../../../store/useModalStore";
 
 const Home = () => {
-  const { allData } = useModalStore();
+  const {
+    allData,
+    isSearching,
+    setIsSearching,
+    searchingInput,
+    searchIndex,
+    setSearchIndex,
+  } = useModalStore();
+
   const [isChatOpen, setIsChatOpen] = useState(false);
+
   const [Index, setIndex] = useState(1);
 
   const { mutate, isPending, error } = useGetData();
+
+  const { mutate: searching } = useSearchBar();
 
   useEffect(() => {
     mutate(Index);
@@ -23,7 +34,18 @@ const Home = () => {
   };
 
   const onPageChangeFunction = (index) => {
-    mutate(index);
+    setSearchIndex(index);
+    if (!isSearching) {
+      mutate(index);
+    }
+    const data = {
+      input: searchingInput,
+    };
+    if (isSearching) {
+      // setIsSearching(false);
+      searching(data);
+    }
+
     if (error) {
       return (
         <div className="text-red-500 text-center mt-10">

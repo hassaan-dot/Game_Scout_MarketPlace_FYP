@@ -4,9 +4,12 @@ import { useSearchBar } from "../../../hooks/useDashboard";
 import { logo, menu, search, thirdweb } from "../../Resources/assets";
 import { navlinks } from "../../Resources/constants";
 import { CustomButton } from "../index";
+import { useModalStore } from "../../../store/useModalStore";
 
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const { setSearchingInput, setSearchIndex } = useModalStore();
 
   const [isActive, setIsActive] = useState("campaign");
 
@@ -52,7 +55,6 @@ const Navbar = () => {
     };
 
     if (!data) return;
-    // if (data) mutate(data);
 
     setSuggestions(allCampaigns);
 
@@ -61,12 +63,17 @@ const Navbar = () => {
 
   const handleSuggestionClick = (item) => {
     if (!item) return;
+    setSearchIndex(1);
+
+    setSearchingInput(item);
 
     setSearchQuery(item);
+
     const data = {
       input: item,
     };
     mutate(data);
+
     setShowSuggestions(false);
   };
 
