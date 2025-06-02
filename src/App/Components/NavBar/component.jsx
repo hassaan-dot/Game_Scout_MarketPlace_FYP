@@ -6,6 +6,9 @@ import { navlinks } from "../../Resources/constants";
 import { CustomButton } from "../index";
 import { useModalStore } from "../../../store/useModalStore";
 import { IoClose } from "react-icons/io5";
+import LocalStorage from "../../../services/local-storage";
+import { useAuthStore } from "../../../store/useAuthStore";
+import { toast } from "react-toastify";
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -15,9 +18,14 @@ const Navbar = () => {
     isSearching,
     setIsSearching,
     searchingInput,
+    setMutateVariable,
   } = useModalStore();
 
   const [isActive, setIsActive] = useState("campaign");
+
+  const { setToken } = useAuthStore();
+
+  const notify = (message) => toast(message);
 
   const [toggleDrawer, setToggleDrawer] = useState(false);
 
@@ -54,6 +62,7 @@ const Navbar = () => {
   };
 
   const handleFocus = (e) => {
+    // setMutateVariable(false);
     setIsSearching(true);
 
     const data = {
@@ -126,6 +135,7 @@ const Navbar = () => {
                   setSearchingInput("");
                   setSearchIndex(1);
                   setSearchQuery("");
+                  setMutateVariable(true);
                 }}
               >
                 <IoClose size={20} color="white" className="justify-center" />
@@ -186,8 +196,7 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Small screen navigation */}
-      <div className="sm:hidden flex justify-between items-center relative">
+      {/* <div className="sm:hidden flex justify-between items-center relative">
         <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
           <img
             src={logo}
@@ -251,6 +260,33 @@ const Navbar = () => {
             />
           </div>
         </div>
+      </div> */}
+
+      <div className="sm:flex hidden flex-row justify-end items-center gap-4">
+        {/* User Avatar */}
+        <Link to="/profile">
+          <div className="w-[40px] h-[40px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
+            <img
+              src={thirdweb}
+              alt="user"
+              className="w-[60%] h-[60%] object-contain"
+            />
+          </div>
+        </Link>
+
+        {/* Sign Out Button */}
+        <button
+          onClick={() => {
+            // Sign out logic goes here
+            LocalStorage.remove("token");
+            LocalStorage.remove("user");
+            setToken("");
+            notify("SignOut Successfully");
+          }}
+          className="text-white text-sm bg-red-500 hover:bg-red-600 px-5 py-2 rounded-md transition"
+        >
+          Sign Out
+        </button>
       </div>
     </div>
   );

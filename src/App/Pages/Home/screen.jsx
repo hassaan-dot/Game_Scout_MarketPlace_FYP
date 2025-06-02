@@ -15,6 +15,7 @@ const Home = () => {
     setSearchIndex,
     searchingIndex,
     setIsSearching,
+    mutateVariable,
   } = useModalStore();
 
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -25,7 +26,7 @@ const Home = () => {
 
   useEffect(() => {
     mutate(1);
-  }, [isSearching]);
+  }, [mutateVariable]);
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);

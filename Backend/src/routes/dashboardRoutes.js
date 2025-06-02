@@ -154,7 +154,7 @@ router.post("/search/:page", async (req, res) => {
       data,
     });
   } catch (err) {
-    console.error("❌ Search failed:", err);
+    console.error(" Search failed:", err);
     res
       .status(500)
       .json({ error: "Search failed due to internal server error" });

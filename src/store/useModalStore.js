@@ -18,4 +18,7 @@ export const useModalStore = create((set) => ({
 
   searchingInput: null,
   setSearchingInput: (searchingInput) => set({ searchingInput }),
+
+  mutateVariable: false,
+  setMutateVariable: (mutateVariable) => set({ mutateVariable }),
 }));
