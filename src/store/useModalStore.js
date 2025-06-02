@@ -4,10 +4,10 @@ export const useModalStore = create((set) => ({
   IsRegister: false,
   setIsRegister: (IsRegister) => set({ IsRegister }),
 
-  AiResponse: "",
+  AiResponse: null,
   setAiResponse: (AiResponse) => set({ AiResponse }),
 
-  allData: "",
+  allData: null,
   setallData: (allData) => set({ allData }),
 
   isSearching: false,
@@ -16,6 +16,6 @@ export const useModalStore = create((set) => ({
   searchIndex: 1,
   setSearchIndex: (searchIndex) => set({ searchIndex }),
 
-  searchingInput: "",
+  searchingInput: null,
   setSearchingInput: (searchingInput) => set({ searchingInput }),
 }));

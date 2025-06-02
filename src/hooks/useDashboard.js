@@ -12,7 +12,10 @@ const handleGetData = async (index) => {
   return res.data;
 };
 
-const handleSearch = async (data, searchIndex) => {
+const handleSearch = async (searchingInput, searchIndex) => {
+  const data = {
+    input: searchingInput,
+  };
   const res = await api_dashboard.post(`/search/${searchIndex}`, data);
   return res.data;
 };
@@ -47,12 +50,13 @@ export const useChatBot = () => {
 };
 
 export const useSearchBar = () => {
-  const { setallData, setIsSearching, searchIndex } = useModalStore();
+  const { setallData, setIsSearching, searchIndex, searchingInput } =
+    useModalStore();
 
   const notify = (message) => toast(message);
   return useMutation({
     mutationKey: ["search"],
-    mutationFn: (data) => handleSearch(data, searchIndex),
+    mutationFn: (data) => handleSearch(searchingInput, searchIndex),
     onSuccess: async (data) => {
       console.log("Search data:", data);
       setallData(data);

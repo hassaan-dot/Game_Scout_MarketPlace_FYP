@@ -24,7 +24,7 @@ const Home = () => {
 
   useEffect(() => {
     mutate(1);
-  }, []);
+  }, [isSearching]);
 
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);

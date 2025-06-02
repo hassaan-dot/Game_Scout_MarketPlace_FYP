@@ -5,11 +5,17 @@ import { logo, menu, search, thirdweb } from "../../Resources/assets";
 import { navlinks } from "../../Resources/constants";
 import { CustomButton } from "../index";
 import { useModalStore } from "../../../store/useModalStore";
-
+import { IoClose } from "react-icons/io5";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const { setSearchingInput, setSearchIndex } = useModalStore();
+  const {
+    setSearchingInput,
+    setSearchIndex,
+    isSearching,
+    setIsSearching,
+    searchingInput,
+  } = useModalStore();
 
   const [isActive, setIsActive] = useState("campaign");
 
@@ -26,8 +32,6 @@ const Navbar = () => {
   const searchRef = useRef(null);
 
   const { mutate, isPending } = useSearchBar();
-
-  const [index, setIndex] = useState(1);
 
   const allCampaigns = useMemo(
     () => ["Lowest Price", "High Ratings", "Ps5", "Discounted", "Ps4"],
@@ -50,6 +54,8 @@ const Navbar = () => {
   };
 
   const handleFocus = (e) => {
+    setIsSearching(true);
+
     const data = {
       input: e.target.value,
     };
@@ -62,16 +68,20 @@ const Navbar = () => {
   };
 
   const handleSuggestionClick = (item) => {
-    if (!item) return;
-    setSearchIndex(1);
+    if (isSearching) {
+      setSearchQuery(item);
+      setSearchingInput(item);
+    }
 
-    setSearchingInput(item);
-
-    setSearchQuery(item);
+    if (!isSearching) return;
+    console.log("Search test:", searchingInput);
 
     const data = {
-      input: item,
+      input: searchingInput,
     };
+
+    setSearchIndex(1);
+
     mutate(data);
 
     setShowSuggestions(false);
@@ -108,6 +118,20 @@ const Navbar = () => {
             onChange={handleSearchChange}
             onFocus={(e) => handleFocus(e)}
           />
+          {isSearching && (
+            <div className="w-[72px] h-full rounded-[20px] bg-[red] flex justify-center items-center cursor-pointer right-2 mr-2">
+              <button
+                onClick={() => {
+                  setIsSearching(false);
+                  setSearchingInput("");
+                  setSearchIndex(1);
+                  setSearchQuery("");
+                }}
+              >
+                <IoClose size={20} color="white" className="justify-center" />
+              </button>
+            </div>
+          )}
           <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
             <img
               src={search}
@@ -117,7 +141,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {showSuggestions && suggestions.length > 0 && (
+        {showSuggestions && suggestions.length > 0 && isSearching && (
           <div className="mt-2 flex overflow-x-auto space-x-2 px-1 scrollbar-hide">
             {suggestions?.map((item, index) => (
               <button
