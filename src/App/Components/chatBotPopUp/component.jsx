@@ -41,12 +41,12 @@ const ChatBotPopup = ({ onClose }) => {
     ) {
       setChatHistory((prev) => [...prev, { sender: "bot", text: AiResponse }]);
       previousAiResponse.current = AiResponse;
-      setIsWaiting(false); // Clear waiting after bot response
+      setIsWaiting(false);
     }
   }, [AiResponse, chatHistory]);
 
   return (
-    <div className="fixed bottom-20 right-6 w-80 h-96 bg-white rounded-lg shadow-xl z-50 flex flex-col">
+    <div className="fixed bottom-28 right-6 w-80 h-96 bg-white rounded-lg shadow-xl z-50 flex flex-col">
       <div className="flex justify-between items-center p-3 border-b">
         <h2 className="text-md font-semibold">{"Intelligence Help"}</h2>
         <button

@@ -75,7 +75,7 @@ const CreateCampaign = () => {
       {isLoading && <Loader />}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">
-          Create a Post
+          Create Post
         </h1>
       </div>
 

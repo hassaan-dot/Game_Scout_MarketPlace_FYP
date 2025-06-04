@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Images } from "../../Resources/Images/index";
 import { useLogin, useSignup } from "../../../hooks/useLogin";
 import { useModalStore } from "../../../store/useModalStore";
 import ClipLoader from "react-spinners/ClipLoader";
-import { FiEye, FiEyeOff, FiMail } from "react-icons/fi"; // Make sure these are imported
+import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 
 const LoginPage = () => {
   const { mutate: handleUserLogin, isPending, isPaused } = useLogin();
@@ -12,11 +11,12 @@ const LoginPage = () => {
 
   const { IsRegister, setIsRegister } = useModalStore();
 
-  const [showPassword, setShowPassword] = useState(false); // New state to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    username: "",
   });
 
   const Connect = () => {
@@ -24,6 +24,7 @@ const LoginPage = () => {
       handleUserSignUp({
         email: formData?.email,
         password: formData?.password,
+        username: formData?.username,
       });
     } else {
       handleUserLogin({ email: formData?.email, password: formData?.password });
@@ -48,18 +49,36 @@ const LoginPage = () => {
 
   return (
     <div
-    className="fixed inset-0 flex justify-center items-center w-full min-h-screen h-screen bg-cover bg-center bg-no-repeat"
-    style={{ backgroundImage: `url(${Images.ironman})` }}
-  >
+      className="flex justify-center items-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${Images.BackgroundLogin})` }}
+    >
       <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg rounded-3xl p-8 backdrop-blur-md">
         <div className="text-center mb-8">
           <h2 className="text-white text-3xl font-semibold">
             {IsRegister ? "Sign Up" : "Login"}
           </h2>
+          <h2 className="text-white text-sm mt-2">
+            {IsRegister ? "Sign Up" : "Welcome Back,you have been missed!"}
+          </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col">
-          <FiMail className="relative left-3 top-8 transform  text-grey text-lg" />
+          <FiUser className="relative left-3 top-12 transform  text-white text-lg" />
+
+          {IsRegister && (
+            <input
+              type="username"
+              id="username"
+              name="Username"
+              value={formData.username}
+              onChange={(event) => handleChange("username", event.target.value)}
+              required
+              placeholder={"Enter you new username"}
+              className="pl-10 p-3 w-full bg-transparent text-sm border border-white text-white rounded-lg placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4"
+            />
+          )}
+          <FiMail className="relative left-3 top-8 transform  text-white text-lg" />
+
           <input
             type="email"
             id="email"
@@ -78,7 +97,11 @@ const LoginPage = () => {
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grey z-10"
             >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
+              {showPassword ? (
+                <FiEyeOff className="text-white text-lg" />
+              ) : (
+                <FiEye className=" text-white text-lg" />
+              )}
             </button>
 
             <input

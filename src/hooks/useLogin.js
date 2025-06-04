@@ -33,16 +33,18 @@ export const useSignup = () => {
 
 export const useLogin = () => {
   const { setUser, setToken } = useAuthStore();
+
   const notify = (message) => toast(message);
   return useMutation({
     mutationKey: ["login"],
     mutationFn: (data) => handleLogin(data),
     onSuccess: async (data) => {
-      notify();
+      notify("Login Successful");
+      console.log("data from response login is", data);
       setToken(data?.token);
       setUser(data?._id);
       LocalStorage.save("token", data?.token);
-      LocalStorage.save("user", data?._id);
+      LocalStorage.save("user", data?.user);
     },
     onError: (error) => {
       notify(error?.response?.data?.message);
