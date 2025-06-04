@@ -48,9 +48,9 @@ const LoginPage = () => {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${Images.BackgroundLogin})` }}
-    >
+    className="fixed inset-0 flex justify-center items-center w-full min-h-screen h-screen bg-cover bg-center bg-no-repeat"
+    style={{ backgroundImage: `url(${Images.ironman})` }}
+  >
       <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg rounded-3xl p-8 backdrop-blur-md">
         <div className="text-center mb-8">
           <h2 className="text-white text-3xl font-semibold">

@@ -40,7 +40,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const displayPages = createPageList();
 
   return (
-    <div className="flex flex-row justify-end items-center mx-40">
+    <div className="flex flex-row justify-end items-center mx-40 mb-8">
       {displayPages.map((page, index) =>
         page === "..." ? (
           <span

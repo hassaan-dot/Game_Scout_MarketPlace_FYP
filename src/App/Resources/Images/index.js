@@ -6,5 +6,6 @@ export const Images={
     Game_Hi_Fi:require('./Hi-Fi.jpeg'),
     Game_NeedForSpeed:require('./games-like-pubg-.jpg'),
     Game_LendsNeverDie:require('./lengends never die.jpeg'),
-    
+    gameofthrones:require('./gameofthrones.jpg'),
+    ironman:require('./ironman.jpg'),
 }
