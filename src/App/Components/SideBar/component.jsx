@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import LocalStorage from "../../../services/local-storage";
 import { useAuthStore } from "../../../store/useAuthStore";
@@ -15,29 +15,29 @@ const Icon = ({ styles, name, imgUrl, isActive, disabled, handleClick }) => (
     } ${styles}`}
     onClick={handleClick}
   >
-    {!isActive ? (
-      <img src={imgUrl} alt="fund_logo" className="w-1/2 h-1/2" />
-    ) : (
-      <img
-        src={imgUrl}
-        alt="fund_logo"
-        className={`w-1/2 h-1/2 ${isActive !== name && "grayscale"}`}
-      />
-    )}
+    <img
+      src={imgUrl}
+      alt="icon"
+      className={`w-1/2 h-1/2 ${!isActive && "grayscale"}`}
+    />
   </div>
 );
 
 const Sidebar = () => {
   const navigate = useNavigate();
-
-  const [isActive, setIsActive] = useState("Home");
+  const location = useLocation(); // Get current URL path
 
   const { setToken } = useAuthStore();
-
   const notify = (message) => toast(message);
 
+  // Helper to check if navlink is active by matching pathname
+  const getIsActive = (link) => {
+    // Example: match exact path or startsWith for nested routes
+    return location.pathname === link;
+  };
+
   return (
-    <div className="flex  justify-between items-center bg-[#2c2f32]] flex-col sticky top-5 h-[93vh]">
+    <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
       <div>
         <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
       </div>
@@ -48,10 +48,9 @@ const Sidebar = () => {
             <Icon
               key={link.name}
               {...link}
-              isActive={isActive}
+              isActive={getIsActive(link.link)}
               handleClick={() => {
                 if (!link.disabled) {
-                  setIsActive(link.name);
                   navigate(link.link);
                 }
                 if (link.name === "logout") {
@@ -59,6 +58,7 @@ const Sidebar = () => {
                   LocalStorage.remove("user");
                   setToken("");
                   notify("SignOut Successfully");
+                  navigate("/login"); // redirect to login or wherever appropriate
                 }
               }}
             />

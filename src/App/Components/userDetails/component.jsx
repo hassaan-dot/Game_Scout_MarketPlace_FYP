@@ -18,7 +18,7 @@ const InformationContainer = ({
     >
       <div className="flex flex-row items-start">
         {profile && (
-          <div className="flex flex-row items-center border border-gray-300 p-4 rounded-lg w-1/4">
+          <div className="flex flex-row items-center h-40 border border-[#2c2f32] p-4 m-5 rounded-lg w-1/4">
             <div className="w-20 h-20 bg-black rounded-full" />
             <div className="ml-4">
               <p className="text-lg font-medium text-white">{data?.username}</p>
@@ -30,9 +30,7 @@ const InformationContainer = ({
           className={`flex-1 border border-[#2c2f32] rounded-lg ml-4 p-6 ${detailscreenContainer}`}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className={`text-base font-bold text-white ${titleStyle}`}>
-              {/* {title} */}
-            </h2>
+            <h2 className={`text-base font-bold text-white ${titleStyle}`}></h2>
             {titleIcon && (
               <img
                 src={icons.tableStatusIcon}

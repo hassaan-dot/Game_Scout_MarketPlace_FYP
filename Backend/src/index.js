@@ -8,6 +8,7 @@ import { connectDB } from "./lib/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import googleLogin from "./routes/google-login.js";
+import CreatePost from "./routes/createPost.js";
 
 dotenv.config();
 
@@ -35,6 +36,8 @@ app.get("/api/auth/googlelogin", googleLogin);
 
 app.use("/api/dashboard", dashboardRoutes);
 
+app.use("/api/post", CreatePost);
+
 app.get("/", upload.single("avatar"), (req, res) => {
   res.send("Welcome to the API");
 });
@@ -42,7 +45,4 @@ app.get("/", upload.single("avatar"), (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   connectDB();
-});
-app.listen(5000, "0.0.0.0", () => {
-  console.log("API running on 0.0.0.0:5000");
 });

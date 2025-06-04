@@ -9,6 +9,9 @@ const api_dashboard = axios.create({
   baseURL:
     process.env.API_URL_DASHBOARD || "http://localhost:3000/api/dashboard",
 });
+const api_post = axios.create({
+  baseURL: process.env.API_URL_Post || "http://localhost:3000/api/post",
+});
 
 const attachTokenInterceptor = (instance) => {
   instance.interceptors.request.use(
@@ -26,5 +29,6 @@ const attachTokenInterceptor = (instance) => {
 
 attachTokenInterceptor(api);
 attachTokenInterceptor(api_dashboard);
+attachTokenInterceptor(api_post);
 
-export { api, api_dashboard };
+export { api, api_dashboard, api_post };

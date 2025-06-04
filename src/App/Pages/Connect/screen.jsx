@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useLogin, useSignup } from "../../../hooks/useLogin";
-import { useModalStore } from "../../../store/useModalStore";
+import { useLogin, useSignup } from "../../../hooks/useLogin.js";
+import { useModalStore } from "../../../store/useModalStore.js";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 
