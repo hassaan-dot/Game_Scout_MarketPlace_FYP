@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Images } from "../../Resources/Images/index";
 import { useLogin, useSignup } from "../../../hooks/useLogin";
 import { useModalStore } from "../../../store/useModalStore";
 import ClipLoader from "react-spinners/ClipLoader";
-import { FiEye, FiEyeOff, FiMail } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 
 const LoginPage = () => {
   const { mutate: handleUserLogin, isPending, isPaused } = useLogin();
@@ -17,6 +16,7 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    username: "",
   });
 
   const Connect = () => {
@@ -24,6 +24,7 @@ const LoginPage = () => {
       handleUserSignUp({
         email: formData?.email,
         password: formData?.password,
+        username: formData?.username,
       });
     } else {
       handleUserLogin({ email: formData?.email, password: formData?.password });
@@ -48,18 +49,42 @@ const LoginPage = () => {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: `url(${Images.BackgroundLogin})` }}
+      className="flex items-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
+      // style={{ backgroundImage: `url(${Images.BackgroundLogin})` }}
     >
-      <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg rounded-3xl p-8 backdrop-blur-md">
-        <div className="text-center mb-8">
+      <div className="hidden md:flex w-1/2 h-[700px] bg-[#8C6DFD] rounded-[40px] justify-start items-end p-20">
+        <div className="text-white items-end">
+          {/* <h1 className="text-3xl font-bold mb-2">Lorem Ipsum is simply</h1>
+          <p className="text-lg">Lorem Ipsum is simply</p> */}
+        </div>
+      </div>
+      <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg justify-center items-center rounded-3xl p-8 backdrop-blur-md my-15 ml-4 md:ml-10">
+        <div className="mb-8">
           <h2 className="text-white text-3xl font-semibold">
             {IsRegister ? "Sign Up" : "Login"}
+          </h2>
+          <h2 className="text-white text-sm mt-2">
+            {IsRegister ? "Sign Up" : "Welcome Back,you have been missed!"}
           </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col">
-          <FiMail className="relative left-3 top-8 transform  text-grey text-lg" />
+          <FiUser className="relative left-3 top-12 transform  text-white text-lg" />
+
+          {IsRegister && (
+            <input
+              type="username"
+              id="username"
+              name="Username"
+              value={formData.username}
+              onChange={(event) => handleChange("username", event.target.value)}
+              required
+              placeholder={"Enter you new username"}
+              className="pl-10 p-3 w-full bg-transparent text-sm border border-white text-white rounded-lg placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4"
+            />
+          )}
+          <FiMail className="relative left-3 top-8 transform  text-white text-lg" />
+
           <input
             type="email"
             id="email"
@@ -78,7 +103,11 @@ const LoginPage = () => {
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute left-3 top-1/2 transform -translate-y-1/2 text-grey z-10"
             >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
+              {showPassword ? (
+                <FiEyeOff className="text-white text-lg" />
+              ) : (
+                <FiEye className=" text-white text-lg" />
+              )}
             </button>
 
             <input

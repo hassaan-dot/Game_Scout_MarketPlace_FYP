@@ -7,54 +7,48 @@ dotenv.config();
 
 const router = express.Router();
 
-// Function to generate JWT token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
-// REGISTER ROUTE
 router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    console.log("Received registration request:", req.body);
+    const { email, password, username } = req.body;
 
-    // Input validation
-    if (email && !password) {
-      return res.status(400).json({ message: "password are required." });
+    if (!email || !password || !username) {
+      return res.status(400).json({ message: "All fields are required." });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({
-        message: "Password must be at least 6 characters long.",
-      });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters long." });
     }
 
-    // Optional: Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({ message: "Invalid email format." });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email is already registered." });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ email, password: hashedPassword });
-
+    const user = new User({ email, username, password: hashedPassword });
     await user.save();
 
-    // const token = generateToken(user._id);
+    const token = generateToken(user._id);
 
     res.status(201).json({
-      _id: user._id,
-      email: user.email,
-      // token,
       message: "User registered successfully",
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+      },
     });
   } catch (error) {
     console.error("Error during registration:", error);
@@ -67,7 +61,6 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Input validation
     if (!email || !password) {
       return res
         .status(400)
@@ -87,10 +80,13 @@ router.post("/login", async (req, res) => {
     const token = generateToken(user._id);
 
     res.status(200).json({
-      _id: user._id,
-      email: user.email,
-      token,
       message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        email: user.email,
+        username: user.username,
+      },
     });
   } catch (error) {
     console.error("Error during login:", error);

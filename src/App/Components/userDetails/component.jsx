@@ -1,21 +1,15 @@
 import React from "react";
-import { icons } from "../../../assets/Icons/icons"; // Adjust path based on your project structure
+import { icons } from "../../Resources/Icons/icons"; // Adjust path based on your project structure
 
 const InformationContainer = ({
-  name = "Ahmed",
-  email = "Ahmed@gmail.com",
-  contact = "923174431419",
-  country = "Saudia Arabia",
-  profile = false,
+  profile = true,
   style = "",
-  Data,
-  title = "Details",
   titleIcon = false,
   titleStyle = "",
   cardContainer = "",
   detailscreenContainer = "",
-  horizontalwidth = "50%",
-  colorProp = "#D0D5DD",
+
+  data,
 }) => {
   return (
     <div
@@ -25,9 +19,9 @@ const InformationContainer = ({
       <div className="flex flex-row items-start">
         {profile && (
           <div className="flex flex-row items-center border border-gray-300 p-4 rounded-lg w-1/4">
-            <div className="w-20 h-20 bg-black rounded-full"></div>
+            <div className="w-20 h-20 bg-black rounded-full" />
             <div className="ml-4">
-              <p className="text-lg font-medium text-white">{name}</p>
+              <p className="text-lg font-medium text-white">{data?.username}</p>
             </div>
           </div>
         )}
@@ -37,7 +31,7 @@ const InformationContainer = ({
         >
           <div className="flex items-center justify-between mb-4">
             <h2 className={`text-base font-bold text-white ${titleStyle}`}>
-              {title}
+              {/* {title} */}
             </h2>
             {titleIcon && (
               <img
@@ -56,7 +50,7 @@ const InformationContainer = ({
                 Contact Person Name
               </p>
               <p className={`text-sm text-[#818183] mt-1 ${style}`}>
-                {Data?.data?.client?.contact_person_name || "N/A"}
+                {data?.username || "N/A"}
               </p>
             </div>
 
@@ -65,7 +59,7 @@ const InformationContainer = ({
                 Company Name
               </p>
               <p className={`text-sm text-[#818183] mt-1 ${style}`}>
-                {Data?.data?.client?.company_name || "N/A"}
+                {data?.company_name || "Granjur Technology"}
               </p>
             </div>
 
@@ -74,7 +68,7 @@ const InformationContainer = ({
                 Address
               </p>
               <p className={`text-sm text-[#818183] mt-1 ${style}`}>
-                {Data?.data?.client?.address || "N/A"}
+                {data?.client?.address || "983 Block L sabzazar lahore"}
               </p>
             </div>
           </div>
@@ -83,7 +77,7 @@ const InformationContainer = ({
             <div className={`flex-1 min-w-[200px]`}>
               <p className={`text-sm text-white font-medium ${style}`}>Email</p>
               <p className={`text-sm text-[#818183] mt-1 ${style}`}>
-                {Data?.data?.client?.email || email}
+                {data?.email}
               </p>
             </div>
 
@@ -92,7 +86,7 @@ const InformationContainer = ({
                 Phone Number
               </p>
               <p className={`text-sm text-[#818183] mt-1 ${style}`}>
-                {Data?.data?.client?.phone_number || contact}
+                {data?.client?.phone_number || "03174431419"}
               </p>
             </div>
 

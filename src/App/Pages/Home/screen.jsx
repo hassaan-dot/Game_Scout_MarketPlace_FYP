@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { icons } from "../../../assets/Icons/icons";
+import { icons } from "../../Resources/Icons/icons";
 import { useGetData, useSearchBar } from "../../../hooks/useDashboard";
 import { useModalStore } from "../../../store/useModalStore";
 import ChatBotPopup from "../../Components/chatBotPopUp/component";
@@ -69,20 +69,22 @@ const Home = () => {
           <ClipLoader color="#ccc" size={60} />
         </div>
       ) : (
-        <div className="flex flex-wrap gap-6 mt-10">
+        <div className="flex flex-wrap gap-6 mt-10 mb-10 px-4">
           {allData && allData.data.length > 0 ? (
             allData.data.map((product) => (
-              <ContentCard key={product.id} content={product} />
+              <div key={product.id} className="m-0">
+                <ContentCard content={product} />
+              </div>
             ))
           ) : (
-            <div className="w-full text-center text-gray-500">
+            <div className="w-full text-center text-gray-500 mt-20 mb-20">
               No Data Found
             </div>
           )}
         </div>
       )}
       {isChatOpen && (
-        <div className="top-0">
+        <div className="m-20">
           <ChatBotPopup onClose={toggleChat} />
         </div>
       )}
