@@ -21,4 +21,13 @@ export const useModalStore = create((set) => ({
 
   mutateVariable: false,
   setMutateVariable: (mutateVariable) => set({ mutateVariable }),
+
+  editActive: false,
+  setEditActive: (editActive) => set({ editActive }),
+
+  editData: "",
+  setEditData: (editData) => set({ editData }),
+
+  searchBarActive: false,
+  setSearchBarActive: (searchBarActive) => set({ searchBarActive }),
 }));

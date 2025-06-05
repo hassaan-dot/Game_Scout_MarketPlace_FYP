@@ -13,7 +13,6 @@ const Home = () => {
     isSearching,
     searchingInput,
     setSearchIndex,
-    searchingIndex,
     setIsSearching,
     mutateVariable,
   } = useModalStore();

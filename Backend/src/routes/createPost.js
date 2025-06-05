@@ -43,18 +43,26 @@ router.post(
   upload.single("picture"),
   async (req, res) => {
     const userId = req.user.userId;
-    console.log("User ID:", userId);
 
     try {
-      const { title, description } = req.body;
+      const { title, description, price } = req.body;
       const picture = req.file ? req.file.filename : undefined;
 
+      console.log("Received Data:", { title, description, price, picture });
+
+      // Basic validation
       if (!title || !description) {
         return res
           .status(400)
           .json({ error: "Title and description are required" });
       }
 
+      // Optional price validation
+      if (price && isNaN(price)) {
+        return res.status(400).json({ error: "Price must be a valid number" });
+      }
+
+      // Check for duplicate post
       const existingPost = await Post.findOne({ title, author: userId });
       if (existingPost) {
         return res
@@ -62,7 +70,15 @@ router.post(
           .json({ error: "Duplicate post detected! Failed" });
       }
 
-      const newPost = new Post({ title, description, picture, author: userId });
+      // Create and save new post
+      const newPost = new Post({
+        title,
+        description,
+        price,
+        picture,
+        author: userId,
+      });
+
       await newPost.save();
 
       res.status(201).json({
@@ -71,6 +87,7 @@ router.post(
           _id: newPost._id,
           title: newPost.title,
           description: newPost.description,
+          price: newPost.price,
           picture: newPost.picture,
           author: newPost.author,
           createdAt: newPost.createdAt,
@@ -78,6 +95,60 @@ router.post(
       });
     } catch (error) {
       console.error("Error creating post:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.put(
+  "/update/:postId",
+  authenticateUser,
+  upload.single("picture"), // Optional new picture
+  async (req, res) => {
+    const userId = req.user.userId;
+    const { postId } = req.params;
+    const { title, description, price } = req.body;
+    const newPicture = req.file ? req.file.filename : null;
+
+    try {
+      const post = await Post.findById(postId);
+
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+
+      if (post.author.toString() !== userId) {
+        return res
+          .status(403)
+          .json({ error: "Unauthorized to update this post" });
+      }
+      if (price && isNaN(price)) {
+        return res.status(400).json({ error: "Price must be a valid number" });
+      }
+      // Update fields
+      if (title) post.title = title;
+      if (description) post.description = description;
+      if (price) post.price = price;
+
+      if (newPicture) post.picture = newPicture;
+
+      await post.save();
+
+      res.status(200).json({
+        message: "Post updated successfully",
+        post: {
+          _id: post._id,
+          title: post.title,
+          price: post.price,
+          description: post.description,
+          picture: post.picture,
+          author: post.author,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+        },
+      });
+    } catch (error) {
+      console.error("Error updating post:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   }

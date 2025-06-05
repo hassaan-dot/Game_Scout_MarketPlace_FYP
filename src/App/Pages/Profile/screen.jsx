@@ -5,20 +5,24 @@ import InformationContainer from "../../Components/userDetails/component";
 import LocalStorage from "../../../services/local-storage";
 import { useDeletePost, useGetAllPosts } from "../../../hooks/usePosts";
 import PostCard from "../../Components/Posts/component";
+import ClipLoader from "react-spinners/ClipLoader";
+import { useModalStore } from "../../../store/useModalStore";
 
 const Profile = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState([]);
-
   const User = LocalStorage.get("user");
+  const { setSearchBarActive } = useModalStore();
 
-  const { mutate: deletePost } = useDeletePost();
+  const { mutate: deletePost, isPending: deletePending } = useDeletePost();
 
-  const { data } = useGetAllPosts();
-  console.log("User Data:", data);
+  const { data, isPending } = useGetAllPosts();
+
   const onClickFunc = (id) => {
     deletePost({ id: id });
   };
+
+  useEffect(() => {
+    setSearchBarActive(false);
+  }, []);
   return (
     <>
       <InformationContainer data={User} />
@@ -28,20 +32,28 @@ const Profile = () => {
         </h1>
       </div>
 
-      <div className="flex w-full flex-wrap gap-10 mt-10">
-        {data?.posts?.map((post) => (
-          <PostCard
-            onClickFunc={onClickFunc}
-            key={post._id}
-            id={post._id}
-            username={User?.username || "Anonymous"}
-            userAvatar=""
-            postImage={post?.picture}
-            title={post?.title || "No Title"}
-            description=""
-          />
-        ))}
-      </div>
+      {isPending || deletePending ? (
+        <div className="flex justify-center  m-20 h-screen">
+          <ClipLoader color="#ccc" size={60} />
+        </div>
+      ) : (
+        <div className="flex w-full flex-wrap gap-10 mt-10">
+          {data?.posts?.map((post) => (
+            <PostCard
+              onClickDel={onClickFunc}
+              object={post}
+              key={post._id}
+              id={post._id}
+              username={User?.username || "Anonymous"}
+              userAvatar=""
+              price={post?.price || "0"}
+              postImage={post?.picture}
+              title={post?.title || "No Title"}
+              description={post?.description || "No Description"}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 };

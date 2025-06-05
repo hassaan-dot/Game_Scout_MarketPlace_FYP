@@ -1,14 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSearchBar } from "../../../hooks/useDashboard";
-import { logo, menu, search, thirdweb } from "../../Resources/assets";
-import { navlinks } from "../../Resources/constants";
-import { CustomButton } from "../index";
-import { useModalStore } from "../../../store/useModalStore";
 import { IoClose } from "react-icons/io5";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useSearchBar } from "../../../hooks/useDashboard";
 import LocalStorage from "../../../services/local-storage";
 import { useAuthStore } from "../../../store/useAuthStore";
-import { toast } from "react-toastify";
+import { useModalStore } from "../../../store/useModalStore";
+import { search, thirdweb } from "../../Resources/assets";
+import { CustomButton } from "../index";
 const Navbar = () => {
   const navigate = useNavigate();
 
@@ -19,15 +18,12 @@ const Navbar = () => {
     setIsSearching,
     searchingInput,
     setMutateVariable,
+    searchBarActive,
   } = useModalStore();
-
-  const [isActive, setIsActive] = useState("campaign");
 
   const { setToken } = useAuthStore();
 
   const notify = (message) => toast(message);
-
-  const [toggleDrawer, setToggleDrawer] = useState(false);
 
   const [address, setAddress] = useState("");
 
@@ -62,7 +58,6 @@ const Navbar = () => {
   };
 
   const handleFocus = (e) => {
-    // setMutateVariable(false);
     setIsSearching(true);
 
     const data = {
@@ -83,7 +78,6 @@ const Navbar = () => {
     }
 
     if (!isSearching) return;
-    console.log("Search test:", searchingInput);
 
     const data = {
       input: searchingInput,
@@ -118,38 +112,40 @@ const Navbar = () => {
         ref={searchRef}
         className="relative lg:flex-1 flex flex-col max-w-[458px]"
       >
-        <div className="flex flex-row py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
-          <input
-            type="text"
-            placeholder="Search for campaigns"
-            className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onFocus={(e) => handleFocus(e)}
-          />
-          {isSearching && (
-            <div className="w-[72px] h-full rounded-[20px] bg-[red] flex justify-center items-center cursor-pointer right-2 mr-2">
-              <button
-                onClick={() => {
-                  setIsSearching(false);
-                  setSearchingInput("");
-                  setSearchIndex(1);
-                  setSearchQuery("");
-                  setMutateVariable(true);
-                }}
-              >
-                <IoClose size={20} color="white" className="justify-center" />
-              </button>
-            </div>
-          )}
-          <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
-            <img
-              src={search}
-              alt="search"
-              className="w-[15px] h-[15px] object-contain"
+        {searchBarActive && (
+          <div className="flex flex-row py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
+            <input
+              type="text"
+              placeholder="Search for campaigns"
+              className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              onFocus={(e) => handleFocus(e)}
             />
+            {isSearching && (
+              <div className="w-[72px] h-full rounded-[20px] bg-[red] flex justify-center items-center cursor-pointer right-2 mr-2">
+                <button
+                  onClick={() => {
+                    setIsSearching(false);
+                    setSearchingInput("");
+                    setSearchIndex(1);
+                    setSearchQuery("");
+                    setMutateVariable(true);
+                  }}
+                >
+                  <IoClose size={20} color="white" className="justify-center" />
+                </button>
+              </div>
+            )}
+            <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
+              <img
+                src={search}
+                alt="search"
+                className="w-[15px] h-[15px] object-contain"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {showSuggestions && suggestions.length > 0 && isSearching && (
           <div className="mt-2 flex overflow-x-auto space-x-2 px-1 scrollbar-hide">

@@ -2,19 +2,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { api_post } from "../services/axios";
 import { useNavigate } from "react-router-dom";
+import { useModalStore } from "../store/useModalStore";
 
 const handleGetAlLPosts = async (data) => {
   const res = await api_post.get("/1");
   return res.data;
 };
 const handleCreatePost = async (data) => {
-  // console.log("Data in handleCreatePost:", data);
   const res = await api_post.post(`/new`, data);
   return res.data;
 };
 const handleDeletePost = async (data) => {
   // console.log("Data in handleCreatePost:", data);
   const res = await api_post.delete(`/delete/${data?.id}`);
+  return res.data;
+};
+
+const handleUpdatePost = async ({ formData, id }) => {
+  const res = await api_post.put(`/update/${id}`, formData);
   return res.data;
 };
 
@@ -40,20 +45,46 @@ export const useCreatePost = () => {
     },
   });
 };
-export const useDeletePost = () => {
+
+export const useUpdatePost = (id) => {
+  const { setEditData, setEditActive } = useModalStore();
+  const navigate = useNavigate();
+
   const queryPO = useQueryClient();
+  const notify = (message) => toast(message);
   return useMutation({
-    mutationKey: ["deletePost"],
-    mutationFn: (data) => handleDeletePost(data),
+    mutationKey: ["updatePost"],
+    mutationFn: ({ formData, id }) => handleUpdatePost({ formData, id }),
     onSuccess: (data) => {
-      // toastSuccess("Success!", "Your PO has beem Deleted successfully");
+      notify(data?.message);
+      setEditData(null);
+      setEditActive(false);
+      navigate("/profile", { replace: true });
 
       queryPO.invalidateQueries({
         queryKey: ["posts"],
       });
     },
     onError: (error) => {
-      // toastError("Oops!", error?.response?.data?.error?.message);
+      notify(error?.response?.data?.message);
+    },
+  });
+};
+export const useDeletePost = () => {
+  const queryPO = useQueryClient();
+  const notify = (message) => toast(message);
+
+  return useMutation({
+    mutationKey: ["deletePost"],
+    mutationFn: (data) => handleDeletePost(data),
+    onSuccess: (data) => {
+      notify(data?.message);
+      queryPO.invalidateQueries({
+        queryKey: ["posts"],
+      });
+    },
+    onError: (error) => {
+      notify(error?.response?.data?.message);
     },
   });
 };

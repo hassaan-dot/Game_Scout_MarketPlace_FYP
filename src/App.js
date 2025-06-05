@@ -28,7 +28,9 @@ const App = () => {
           {token && (
             <>
               <Route path="/Home" element={<Home />} />
-              <Route path="/CreatePosts" element={<CreatePosts />} />
+              {/* <Route path="/CreatePosts" element={<CreatePosts />} /> */}
+              <Route path="/createPosts/:edit" element={<CreatePosts />} />
+
               <Route path="/Profile" element={<Profile />} />
               <Route path="/create-campaign" element={<CreateCampaign />} />
             </>

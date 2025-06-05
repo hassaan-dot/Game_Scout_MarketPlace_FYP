@@ -48,12 +48,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div
-      className="flex justify-center items-center min-h-screen w-full bg-cover bg-center bg-no-repeat"
-      // style={{ backgroundImage: `url(${Images.BackgroundLogin})` }}
-    >
-      <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg rounded-3xl p-8 backdrop-blur-md">
-        <div className="text-center mb-8">
+    <div className="flex items-center min-h-screen w-full bg-cover bg-center bg-no-repeat">
+      <div className="hidden md:flex w-1/2 h-[700px] bg-[#8C6DFD] rounded-[40px] justify-start items-end p-20">
+        <div className="text-white items-end"></div>
+      </div>
+      <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg justify-center items-center rounded-3xl p-8 backdrop-blur-md my-15 ml-4 md:ml-10">
+        <div className="mb-8">
           <h2 className="text-white text-3xl font-semibold">
             {IsRegister ? "Sign Up" : "Login"}
           </h2>
@@ -144,7 +144,7 @@ const LoginPage = () => {
             {isPending && (
               <ClipLoader
                 color="#ffffff"
-                loading={true} // Replace with your loading state
+                loading={true}
                 size={20}
                 className="inline-block ml-2"
               />
