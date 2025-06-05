@@ -24,7 +24,7 @@ root.render(
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light" // light | dark | colored
+        theme="light"
       />
     </BrowserRouter>
   </QueryProvider>
