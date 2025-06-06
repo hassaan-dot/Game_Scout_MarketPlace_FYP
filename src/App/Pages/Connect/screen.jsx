@@ -3,10 +3,11 @@ import { useLogin, useSignup } from "../../../hooks/useLogin.js";
 import { useModalStore } from "../../../store/useModalStore.js";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const { mutate: handleUserLogin, isPending, isPaused } = useLogin();
-
+  const nav = useNavigate();
   const { mutate: handleUserSignUp } = useSignup();
 
   const { IsRegister, setIsRegister } = useModalStore();
@@ -18,8 +19,9 @@ const LoginPage = () => {
     password: "",
     username: "",
   });
-
+  console.log("formData", formData);
   const Connect = () => {
+    // nav("/profile");
     if (IsRegister) {
       handleUserSignUp({
         email: formData?.email,

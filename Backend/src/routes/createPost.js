@@ -46,7 +46,7 @@ router.post(
 
     try {
       const { title, description, price } = req.body;
-      const picture = req.file ? req.file.filename : undefined;
+      const picture = req.file ? req.file.filename : null;
 
       console.log("Received Data:", { title, description, price, picture });
 
@@ -55,6 +55,10 @@ router.post(
         return res
           .status(400)
           .json({ error: "Title and description are required" });
+      }
+
+      if (!picture) {
+        return res.status(400).json({ error: "Picture is required" });
       }
 
       // Optional price validation

@@ -11,7 +11,7 @@ const CreatePost = () => {
   const { edit } = useParams();
   const isEditMode = edit === "true";
 
-  const { editData } = useModalStore();
+  const { editData, editActive } = useModalStore();
 
   const [form, setForm] = useState(() => {
     if (isEditMode && editData) {
@@ -19,7 +19,7 @@ const CreatePost = () => {
         title: editData.title || "",
         description: editData.description || "",
         price: editData.price || "",
-        image: editData.image || "",
+        image: editData.picture || "",
         imageFile: null,
       };
     }
@@ -62,7 +62,9 @@ const CreatePost = () => {
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("price", form.price);
-    formData.append("image", form.image);
+    if (form.imageFile) {
+      formData.append("picture", form.imageFile); // <-- Correct field name and actual file
+    }
 
     if (isEditMode && editData?._id) {
       updatePost({ formData, id: editData._id });
@@ -82,7 +84,7 @@ const CreatePost = () => {
         <div className="bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4">
           <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
             <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">
-              {isEditMode ? "Edit Post" : "Create Post"}
+              {editActive ? "Edit Post" : "Create Post"}
             </h1>
           </div>
 
@@ -128,7 +130,12 @@ const CreatePost = () => {
             {form.image && (
               <div className="flex justify-center items-center mt-4">
                 <img
-                  src={form.image}
+                  src={
+                    editActive
+                      ? form.image ||
+                        "http://localhost:3000/uploads/" + editData.picture
+                      : form.image``
+                  }
                   alt="preview"
                   className="w-[200px] h-[150px] object-cover rounded"
                 />
@@ -138,7 +145,7 @@ const CreatePost = () => {
             <div className="flex justify-center items-center mt-[40px]">
               <CustomButton
                 btnType="submit"
-                title={isEditMode ? "Edit Post" : "Create Post"}
+                title={editActive ? "Edit Post" : "Create Post"}
                 styles="bg-[#1dc071]"
                 handleClick={handleClick}
               />

@@ -16,7 +16,7 @@ const app = express();
 
 const upload = multer({ dest: "uploads/" });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -29,6 +29,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 
@@ -42,7 +43,11 @@ app.get("/", upload.single("avatar"), (req, res) => {
   res.send("Welcome to the API");
 });
 
+// app.listen(PORT,192.168.1.16:3001, () => {
+//   console.log(`🚀 Server is running on port ${PORT}`);
+//   connectDB();
+// });
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running at http://192.168.1.16:${PORT}`);
   connectDB();
 });

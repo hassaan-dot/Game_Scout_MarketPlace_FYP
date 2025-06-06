@@ -41,7 +41,7 @@ export const useCreatePost = () => {
       navigate("/profile", { replace: true });
     },
     onError: (error) => {
-      notify(error?.response?.data?.message);
+      notify(error);
     },
   });
 };

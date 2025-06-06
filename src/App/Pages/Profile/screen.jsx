@@ -10,6 +10,7 @@ import { useModalStore } from "../../../store/useModalStore";
 
 const Profile = () => {
   const User = LocalStorage.get("user");
+
   const { setSearchBarActive } = useModalStore();
 
   const { mutate: deletePost, isPending: deletePending } = useDeletePost();

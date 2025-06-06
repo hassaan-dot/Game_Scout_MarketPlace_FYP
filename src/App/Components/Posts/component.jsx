@@ -11,16 +11,17 @@ const PostCard = ({
   onClickDel,
   price,
   object,
+  postImage,
   id,
 }) => {
-  const { setEditData, setEditActive } = useModalStore();
+  const { setEditData, setEditActive, editActive } = useModalStore();
   const navigate = useNavigate();
   return (
     <div className="rounded-2xl shadow-md w-70 mb-6 ml-10 border border-[#2c2f32]">
       <div className="flex flex-row items-center justify-between p-4">
         <div className="flex items-center">
           <img
-            src={userAvatar || Images.Game_Hi_Fi}
+            src={`http://localhost:3000/uploads/${postImage}`}
             alt={username}
             className="w-10 h-10 rounded-full mr-3 "
           />
@@ -32,7 +33,7 @@ const PostCard = ({
               setEditData(object);
               setEditActive(true);
               // navigate("/createPosts");
-              navigate("/CreatePosts/true");
+              navigate(`/CreatePosts/${true}`);
             }}
             className="bg-[#4acd8d] hover:bg-red-700 text-white px-3 py-1 text-sm rounded-full mr-2"
           >
@@ -48,7 +49,7 @@ const PostCard = ({
       </div>
 
       <img
-        src={Images.Game_Hi_Fi}
+        src={`http://localhost:3000/uploads/${postImage}`}
         alt="Post"
         className="w-full h-60 object-cover"
       />
