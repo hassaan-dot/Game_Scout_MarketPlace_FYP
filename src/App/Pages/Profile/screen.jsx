@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-
-import { DisplayContent } from "../../Components/index";
-import InformationContainer from "../../Components/userDetails/component";
-import LocalStorage from "../../../services/local-storage";
-import { useDeletePost, useGetAllPosts } from "../../../hooks/usePosts";
-import PostCard from "../../Components/Posts/component";
+import React, { useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useDeletePost, useGetAllPosts } from "../../../hooks/usePosts";
+import LocalStorage from "../../../services/local-storage";
 import { useModalStore } from "../../../store/useModalStore";
+import PostCard from "../../Components/Posts/component";
+import InformationContainer from "../../Components/userDetails/component";
 
 const Profile = () => {
   const User = LocalStorage.get("user");

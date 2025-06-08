@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLogin, useSignup } from "../../../hooks/useLogin.js";
 import { useModalStore } from "../../../store/useModalStore.js";
 import ClipLoader from "react-spinners/ClipLoader";
-import { FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiMail, FiUser, FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -21,7 +21,7 @@ const LoginPage = () => {
   });
   console.log("formData", formData);
   const Connect = () => {
-    // nav("/profile");
+    // nav("/profile");s
     if (IsRegister) {
       handleUserSignUp({
         email: formData?.email,
@@ -54,14 +54,25 @@ const LoginPage = () => {
       <div className="hidden md:flex w-1/2 h-[700px] bg-[#8C6DFD] rounded-[40px] justify-start items-end p-20">
         <div className="text-white items-end"></div>
       </div>
+
       <div className="w-96 md:w-[400px] relative z-10 bg-red shadow-lg justify-center items-center rounded-3xl p-8 backdrop-blur-md my-15 ml-4 md:ml-10">
         <div className="mb-8">
+          {IsRegister && (
+            <button onClick={() => setIsRegister(false)}>
+              <div className="mb-4">
+                <FiArrowLeft className="text-white w-8 h-8 cursor-pointer" />
+              </div>
+            </button>
+          )}
+
           <h2 className="text-white text-3xl font-semibold">
             {IsRegister ? "Sign Up" : "Login"}
           </h2>
-          <h2 className="text-white text-sm mt-2">
-            {IsRegister ? "Sign Up" : "Welcome Back,you have been missed!"}
-          </h2>
+          <h4 className="text-[#ccc] text-sm mt-3">
+            {IsRegister
+              ? "First! Create your account"
+              : "Welcome Back, you have been missed!"}
+          </h4>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col">
@@ -76,7 +87,7 @@ const LoginPage = () => {
               onChange={(event) => handleChange("username", event.target.value)}
               required
               placeholder={"Enter you new username"}
-              className="pl-10 p-3 w-full bg-transparent text-sm border border-white text-white rounded-lg placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4"
+              className="pl-10 p-3 w-full bg-transparent text-sm border border-white rounded-lg placeholder focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4"
             />
           )}
           <FiMail className="relative left-3 top-8 transform  text-white text-lg" />
@@ -91,7 +102,7 @@ const LoginPage = () => {
             placeholder={
               IsRegister ? "Enter you new email" : "Enter your email"
             }
-            className="pl-10 p-3 w-full bg-transparent text-sm border border-white text-white rounded-lg placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="pl-10 p-3 w-full bg-transparent text-sm border border-white text-[#fff] rounded-lg placeholder focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <div className="relative mt-4">
             <button
@@ -116,7 +127,7 @@ const LoginPage = () => {
               placeholder={
                 IsRegister ? "Enter you new Password" : "Enter your Password"
               }
-              className="pl-10 p-3 w-full text-sm bg-transparent border border-white text-white rounded-lg placeholder-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="pl-10 p-3 w-full text-sm bg-transparent border border-white text-[#fff] rounded-lg  focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
@@ -153,16 +164,18 @@ const LoginPage = () => {
             )}
           </button>
           {!IsRegister && (
-            <p className="text-sm text-white mt-6">
-              Don't have an account?{" "}
-              <button
-                onClick={registerFunction}
-                href="#"
-                className="font-semibold underline text-indigo-300 hover:text-white"
-              >
-                Register
-              </button>
-            </p>
+            <div className="flex flex-col justify-center items-center">
+              <p className="text-sm text-white mt-6">
+                Don't have an account?{"    "}
+                <button
+                  onClick={registerFunction}
+                  className="font-semibold underline text-indigo-300 hover:text-white"
+                  type="button"
+                >
+                  Register
+                </button>
+              </p>
+            </div>
           )}
         </form>
       </div>

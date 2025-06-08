@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useCreatePost, useUpdatePost } from "../../../hooks/usePosts";
@@ -7,31 +7,40 @@ import { CustomButton, FormField } from "../../Components/index";
 
 const CreatePost = () => {
   const { mutate: createPost, isPending } = useCreatePost();
+
   const { mutate: updatePost } = useUpdatePost();
+
   const { edit } = useParams();
+
   const isEditMode = edit === "true";
 
   const { editData, editActive } = useModalStore();
 
-  const [form, setForm] = useState(() => {
-    if (isEditMode && editData) {
-      return {
-        title: editData.title || "",
-        description: editData.description || "",
-        price: editData.price || "",
-        image: editData.picture || "",
-        imageFile: null,
-      };
-    }
+  const fileInputRef = useRef(null);
 
-    return {
-      title: "",
-      description: "",
-      price: "",
-      image: "",
+  const [form, setForm] = useState(() => ({
+    title: isEditMode && editData?.title ? editData.title : "",
+    description:
+      isEditMode && editData?.description ? editData.description : "",
+    price: isEditMode && editData?.price ? editData.price : "",
+    image:
+      isEditMode && editData?.picture
+        ? `http://localhost:3000/uploads/${editData.picture}`
+        : "",
+    imageFile: null,
+  }));
+
+  const handleDeleteImage = () => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      image: null,
       imageFile: null,
-    };
-  });
+    }));
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleFormFieldChange = (fieldName, e) => {
     if (fieldName === "image") {
@@ -63,7 +72,7 @@ const CreatePost = () => {
     formData.append("description", form.description);
     formData.append("price", form.price);
     if (form.imageFile) {
-      formData.append("picture", form.imageFile); // <-- Correct field name and actual file
+      formData.append("picture", form.imageFile);
     }
 
     if (isEditMode && editData?._id) {
@@ -120,6 +129,7 @@ const CreatePost = () => {
             <div>
               <label className="text-white block mb-2">Upload Image *</label>
               <input
+                ref={fileInputRef}
                 type="file"
                 accept="image/*"
                 onChange={(e) => handleFormFieldChange("image", e)}
@@ -128,17 +138,18 @@ const CreatePost = () => {
             </div>
 
             {form.image && (
-              <div className="flex justify-center items-center mt-4">
+              <div className="flex flex-col justify-center items-center mt-4 gap-2">
                 <img
-                  src={
-                    editActive
-                      ? form.image ||
-                        "http://localhost:3000/uploads/" + editData.picture
-                      : form.image``
-                  }
+                  src={form.image}
                   alt="preview"
                   className="w-[200px] h-[150px] object-cover rounded"
                 />
+                <button
+                  onClick={handleDeleteImage}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded text-sm"
+                >
+                  Remove Image
+                </button>
               </div>
             )}
 
