@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,10 +6,29 @@ import { useSearchBar } from "../../../hooks/useDashboard";
 import LocalStorage from "../../../services/local-storage";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useModalStore } from "../../../store/useModalStore";
-import { search, thirdweb } from "../../Resources/assets";
-import { CustomButton } from "../index";
+import { logo, menu, search, thirdweb } from "../../Resources/assets/index";
+import { navlinks } from "../../Resources/constants";
+
 const Navbar = () => {
   const navigate = useNavigate();
+
+  const notify = (message) => toast(message);
+
+  const [isActive, setIsActive] = useState("dashboard");
+
+  const [toggleDrawer, setToggleDrawer] = useState(false);
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [suggestions, setSuggestions] = useState([]);
+
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const { setToken } = useAuthStore();
+
+  const searchRef = useRef(null);
+
+  const { mutate, isPending } = useSearchBar();
 
   const {
     setSearchingInput,
@@ -21,22 +40,6 @@ const Navbar = () => {
     searchBarActive,
   } = useModalStore();
 
-  const { setToken } = useAuthStore();
-
-  const notify = (message) => toast(message);
-
-  const [address, setAddress] = useState("");
-
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const [suggestions, setSuggestions] = useState([]);
-
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
-  const searchRef = useRef(null);
-
-  const { mutate, isPending } = useSearchBar();
-
   const allCampaigns = useMemo(
     () => ["Lowest Price", "High Ratings", "Ps5", "Discounted", "Ps4"],
     []
@@ -44,7 +47,6 @@ const Navbar = () => {
 
   const handleSearchChange = (e) => {
     const query = e.target.value;
-
     setSearchQuery(query);
     if (query.length > 0) {
       const filtered = allCampaigns.filter((item) =>
@@ -90,24 +92,9 @@ const Navbar = () => {
     setShowSuggestions(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const Connect = () => {
-    navigate("/Connect");
-  };
-
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
+      {/* Search Bar */}
       <div
         ref={searchRef}
         className="relative lg:flex-1 flex flex-col max-w-[458px]"
@@ -161,69 +148,53 @@ const Navbar = () => {
           </div>
         )}
       </div>
-
-      <div className="sm: flex hidden flex bg-[#000] flex-row justify-end gap-4">
-        <CustomButton
-          btnType="button"
-          title={address ? "Create a campaign" : "Connect"}
-          styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
-          handleClick={() => {
-            if (address) navigate("create-campaign");
-            else Connect();
-          }}
-        />
-        <CustomButton
-          btnType="button"
-          title={address ? "Create a campaign" : "Connect"}
-          styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
-          handleClick={() => {
-            if (address) navigate("create-campaign");
-            else Connect();
-          }}
-        />
-        <Link to="/profile">
-          <div className="w-[52px] h-[52px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
-            <img
-              src={thirdweb}
-              alt="user"
-              className="w-[60%] h-[60%] object-contain"
-            />
-          </div>
-        </Link>
-      </div>
-
-      {/* <div className="sm:hidden flex justify-between items-center relative">
+      s{" "}
+      <div className="sm:hidden flex justify-between items-center relative">
         <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
           <img
             src={logo}
-            alt="user"
+            alt="logo"
             className="w-[60%] h-[60%] object-contain"
           />
         </div>
 
-        <img
-          src={menu}
-          alt="menu"
-          className="w-[34px] h-[34px] object-contain cursor-pointer"
+        <div
+          className="cursor-pointer"
           onClick={() => setToggleDrawer((prev) => !prev)}
-        />
+        >
+          {toggleDrawer ? (
+            <IoClose size={34} color="white" />
+          ) : (
+            <img
+              src={menu}
+              alt="menu"
+              className="w-[34px] h-[34px] object-contain"
+            />
+          )}
+        </div>
 
         <div
-          className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 ${
+          className={`absolute top-[60px] right-0 left-0 bg-[#1c1c24] z-10 shadow-secondary py-4 px-4 rounded-b-lg transition-all duration-700 ${
             !toggleDrawer ? "-translate-y-[100vh]" : "translate-y-0"
-          } transition-all duration-700`}
+          }`}
         >
-          <ul className="mb-4">
+          <ul className="mb-4 space-y-2">
             {navlinks.map((link) => (
               <li
                 key={link.name}
-                className={`flex p-4 ${
-                  isActive === link.name && "bg-[#3a3a43]"
+                className={`flex items-center gap-3 p-3 rounded-md cursor-pointer ${
+                  isActive === link.name ? "bg-[#3a3a43]" : ""
                 }`}
                 onClick={() => {
                   setIsActive(link.name);
                   setToggleDrawer(false);
                   navigate(link.link);
+                  if (link.name === "logout") {
+                    LocalStorage.remove("token");
+                    LocalStorage.remove("user");
+                    setToken("");
+                    notify("SignOut Successfully");
+                  }
                 }}
               >
                 <img
@@ -234,7 +205,7 @@ const Navbar = () => {
                   }`}
                 />
                 <p
-                  className={`ml-[20px] font-epilogue font-semibold text-[14px] ${
+                  className={`font-epilogue font-semibold text-[14px] ${
                     isActive === link.name ? "text-[#1dc071]" : "text-[#808191]"
                   }`}
                 >
@@ -243,21 +214,8 @@ const Navbar = () => {
               </li>
             ))}
           </ul>
-
-          <div className="flex mx-4">
-            <CustomButton
-              btnType="button"
-              title={address ? "Create a campaign" : "Connect"}
-              styles={address ? "bg-[#1dc071]" : "bg-[#8c6dfd]"}
-              handleClick={() => {
-                if (address) navigate("create-campaign");
-                else Connect();
-              }}
-            />
-          </div>
         </div>
-      </div> */}
-
+      </div>
       <div className="sm:flex hidden flex-row justify-end items-center gap-4">
         {/* User Avatar */}
         <Link to="/profile">
@@ -270,10 +228,8 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* Sign Out Button */}
         <button
           onClick={() => {
-            // Sign out logic goes here
             LocalStorage.remove("token");
             LocalStorage.remove("user");
             setToken("");

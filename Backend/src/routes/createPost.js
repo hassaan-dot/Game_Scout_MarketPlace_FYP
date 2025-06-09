@@ -158,7 +158,6 @@ router.put(
   }
 );
 
-// DELETE route to delete a post by ID
 router.delete("/delete/:postId", authenticateUser, async (req, res) => {
   const userId = req.user.userId;
   const { postId } = req.params;

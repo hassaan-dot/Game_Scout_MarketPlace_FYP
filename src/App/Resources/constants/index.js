@@ -40,7 +40,7 @@ export const navlinks = [
   {
     name: "logout",
     imgUrl: logout,
-    link: "/",
+    // link: "/",
     disabled: false,
   },
 ];

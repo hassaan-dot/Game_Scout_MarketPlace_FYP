@@ -4,6 +4,7 @@ import { api } from "../services/axios";
 import LocalStorage from "../services/local-storage";
 import { useAuthStore } from "../store/useAuthStore";
 import { useModalStore } from "../store/useModalStore";
+import { useNavigate } from "react-router-dom";
 
 const handleLogin = async (data) => {
   const res = await api.post("/login", data);
@@ -34,17 +35,21 @@ export const useSignup = () => {
 export const useLogin = () => {
   const { setUser, setToken } = useAuthStore();
 
+  const navigate = useNavigate();
   const notify = (message) => toast(message);
   return useMutation({
     mutationKey: ["login"],
     mutationFn: (data) => handleLogin(data),
     onSuccess: async (data) => {
       notify("Login Successful");
-      console.log("data from response login is", data);
+
       setToken(data?.token);
       setUser(data?._id);
-      LocalStorage.save("token", data?.token);
-      LocalStorage.save("user", data?.user);
+      if (data) {
+        navigate("/Home");
+        LocalStorage.save("token", data?.token);
+        LocalStorage.save("user", data?.user);
+      }
     },
     onError: (error) => {
       notify(error?.response?.data?.message);

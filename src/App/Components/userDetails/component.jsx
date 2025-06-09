@@ -17,14 +17,14 @@ const InformationContainer = ({
       style={{ marginVertical: 0 }}
     >
       <div className="flex flex-row items-start">
-        {profile && (
+        {/* {profile && (
           <div className="flex flex-row items-center h-40 border border-[#2c2f32] p-4 m-5 rounded-lg w-1/4">
             <div className="w-20 h-20 bg-black rounded-full" />
             <div className="ml-4">
               <p className="text-lg font-medium text-white">{data?.username}</p>
             </div>
           </div>
-        )}
+        )} */}
 
         <div
           className={`flex-1 border border-[#2c2f32] rounded-lg ml-4 p-6 ${detailscreenContainer}`}

@@ -199,37 +199,3 @@ router.post("/chatBot", async (req, res) => {
 });
 
 export default router;
-
-// router.post("/chatBot", async (req, res) => {
-//   try {
-//     const { message } = req.body;
-//     console.log("Received message request:", message);
-
-//     if (!message) {
-//       return res.status(400).json({ message: "Send any message." });
-//     }
-
-//     const response = await axios.post(
-//       "https://openrouter.ai/api/v1/chat/completions",
-//       {
-//         model: "deepseek/deepseek-r1:free",
-//         messages: [{ role: "user", content: message }],
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-
-//     const reply = response.data.choices[0].message.content;
-//     res.status(200).json({ reply });
-//   } catch (error) {
-//     console.error(
-//       "Error during chatBot processing:",
-//       error.response?.data || error.message
-//     );
-//     res.status(500).json({ message: "Failed to process chat." });
-//   }
-// });

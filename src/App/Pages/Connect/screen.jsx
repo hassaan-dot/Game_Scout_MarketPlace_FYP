@@ -19,9 +19,7 @@ const LoginPage = () => {
     password: "",
     username: "",
   });
-  console.log("formData", formData);
   const Connect = () => {
-    // nav("/profile");s
     if (IsRegister) {
       handleUserSignUp({
         email: formData?.email,
