@@ -94,16 +94,13 @@ const Navbar = () => {
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
-      {/* Search Bar */}
-      <div
-        ref={searchRef}
-        className="relative lg:flex-1 flex flex-col max-w-[458px]"
-      >
+      \{" "}
+      <div ref={searchRef} className=" lg:flex-1 flex flex-col max-w-[458px]">
         {searchBarActive && (
           <div className="flex flex-row py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
             <input
               type="text"
-              placeholder="Search for campaigns"
+              placeholder="Search for games"
               className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
               value={searchQuery}
               onChange={handleSearchChange}
@@ -148,7 +145,6 @@ const Navbar = () => {
           </div>
         )}
       </div>
-      s{" "}
       <div className="sm:hidden flex justify-between items-center relative">
         <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
           <img
@@ -217,7 +213,6 @@ const Navbar = () => {
         </div>
       </div>
       <div className="sm:flex hidden flex-row justify-end items-center gap-4">
-        {/* User Avatar */}
         <Link to="/profile">
           <div className="w-[40px] h-[40px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img
