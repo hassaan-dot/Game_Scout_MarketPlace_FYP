@@ -7,12 +7,16 @@ import { useModalStore } from "../store/useModalStore";
 import { useNavigate } from "react-router-dom";
 
 const handleLogin = async (data) => {
-  const res = await api.post("/login", data);
+  const res = await api.post("/send-otp", data);
   return res.data;
 };
 
 const handleSignUp = async (data) => {
   const res = await api.post("/register", data);
+  return res.data;
+};
+const handleOtpSubmit = async (data) => {
+  const res = await api.post("/verify-otp", data);
   return res.data;
 };
 
@@ -32,14 +36,14 @@ export const useSignup = () => {
   });
 };
 
-export const useLogin = () => {
+export const useOtpSubmit = () => {
   const { setUser, setToken } = useAuthStore();
-
   const navigate = useNavigate();
+
   const notify = (message) => toast(message);
   return useMutation({
-    mutationKey: ["login"],
-    mutationFn: (data) => handleLogin(data),
+    mutationKey: ["otp"],
+    mutationFn: (data) => handleOtpSubmit(data),
     onSuccess: async (data) => {
       notify("Login Successful");
 
@@ -50,6 +54,32 @@ export const useLogin = () => {
         LocalStorage.save("token", data?.token);
         LocalStorage.save("user", data?.user);
       }
+    },
+    onError: (error) => {
+      notify(error?.response?.data?.message || "Signup failed");
+    },
+  });
+};
+
+export const useLogin = () => {
+  const { setUser, setToken } = useAuthStore();
+  const { setOtpModalVisible } = useModalStore();
+  const navigate = useNavigate();
+  const notify = (message) => toast(message);
+  return useMutation({
+    mutationKey: ["login"],
+    mutationFn: (data) => handleLogin(data),
+    onSuccess: async (data) => {
+      // notify("Login Successful");
+      // setToken(data?.token);
+      // setUser(data?._id);
+      // if (data) {
+      //   navigate("/Home");
+      //   LocalStorage.save("token", data?.token);
+      //   LocalStorage.save("user", data?.user);
+
+      // }
+      setOtpModalVisible(true);
     },
     onError: (error) => {
       notify(error?.response?.data?.message);

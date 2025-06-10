@@ -30,4 +30,7 @@ export const useModalStore = create((set) => ({
 
   searchBarActive: false,
   setSearchBarActive: (searchBarActive) => set({ searchBarActive }),
+
+  otpModalVisible: false,
+  setOtpModalVisible: (otpModalVisible) => set({ otpModalVisible }),
 }));

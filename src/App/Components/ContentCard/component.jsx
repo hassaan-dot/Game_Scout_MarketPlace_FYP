@@ -1,13 +1,17 @@
-const ProductCard = ({ content, addToCart }) => {
+const ProductCard = ({ content, addToCart, isFeatured = false }) => {
   return (
     <a
       href={content?.["game-list-item href"]}
       target="_blank"
       rel="noopener noreferrer"
-      className="relative group block w-full sm:w-64 md:h-56 lg:h-66 bg-cover shadow-md border border-[#333C] overflow-hidden"
+      className={`relative group block w-full ${
+        isFeatured ? "md:h-72 lg:h-80" : "sm:w-64 md:h-56 lg:h-66"
+      } bg-cover shadow-md border border-[#333C] overflow-hidden`}
     >
       <img
-        className="w-full sm:w-64 md:h-56 lg:h-60 bg-cover bg-center shadow-md border-[#333C] my-0"
+        className={`w-full ${
+          isFeatured ? "h-72 lg:h-80" : "sm:w-64 md:h-56 lg:h-60"
+        } bg-cover bg-center shadow-md border-[#333C] my-0`}
         src={content?.["catalog-img src"]}
         alt={content?.name}
       />
