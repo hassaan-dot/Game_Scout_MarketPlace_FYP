@@ -94,7 +94,6 @@ const Navbar = () => {
 
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
-      \{" "}
       <div ref={searchRef} className=" lg:flex-1 flex flex-col max-w-[458px]">
         {searchBarActive && (
           <div className="flex flex-row py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
@@ -107,7 +106,7 @@ const Navbar = () => {
               onFocus={(e) => handleFocus(e)}
             />
             {isSearching && (
-              <div className="w-[72px] h-full rounded-[20px] bg-[red] flex justify-center items-center cursor-pointer right-2 mr-2">
+              <div>
                 <button
                   onClick={() => {
                     setIsSearching(false);
@@ -116,6 +115,7 @@ const Navbar = () => {
                     setSearchQuery("");
                     setMutateVariable(true);
                   }}
+                  className=" rounded-[20px] bg-[red] flex justify-center items-center cursor-pointer right-2 mr-2 p-2 px-3"
                 >
                   <IoClose size={20} color="white" className="justify-center" />
                 </button>
@@ -212,7 +212,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className="sm:flex hidden flex-row justify-end items-center gap-4">
+      <div className=" sm:flex hidden flex-row justify-end items-center gap-4 ">
         <Link to="/profile">
           <div className="w-[40px] h-[40px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img

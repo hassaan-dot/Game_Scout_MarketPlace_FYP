@@ -23,7 +23,7 @@ const Profile = () => {
     setSearchBarActive(false);
   }, []);
   return (
-    <>
+    <div className="items-center mt-20">
       <InformationContainer data={User} />
       <div>
         <h1 className="font-epilogue font-semibold text-[18px] text-white text-left">
@@ -53,7 +53,7 @@ const Profile = () => {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

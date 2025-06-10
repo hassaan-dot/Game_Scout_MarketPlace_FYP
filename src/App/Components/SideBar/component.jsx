@@ -30,7 +30,13 @@ const Sidebar = () => {
 
   const { setToken } = useAuthStore();
   const notify = (message) => toast(message);
-  const { setEditActive, setEditData, setSearchBarActive } = useModalStore();
+  const {
+    setEditActive,
+    setEditData,
+    setSearchBarActive,
+    setIsSearching,
+    setSearchingInput,
+  } = useModalStore();
 
   useEffect(() => {
     if (location.pathname === "/Home") {
@@ -82,9 +88,11 @@ const Sidebar = () => {
                 } else if (link.name === "Home") {
                   navigate("/Home");
                   setSearchBarActive(true);
-                } else if (!link.disabled) {
+                } else if (link.name !== "Home" && !link.disabled) {
                   navigate(link.link);
+                  setSearchingInput("");
                   setSearchBarActive(false);
+                  setIsSearching(false);
                 }
               }}
             />
