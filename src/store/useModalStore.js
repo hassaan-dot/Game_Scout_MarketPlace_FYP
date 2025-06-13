@@ -33,4 +33,7 @@ export const useModalStore = create((set) => ({
 
   otpModalVisible: false,
   setOtpModalVisible: (otpModalVisible) => set({ otpModalVisible }),
+
+  showComments: false,
+  setShowComments: (showComments) => set({ showComments }),
 }));

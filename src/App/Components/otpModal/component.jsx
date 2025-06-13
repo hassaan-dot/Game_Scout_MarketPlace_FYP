@@ -37,7 +37,13 @@ const OTPModal = ({ visible, onClose, email }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white w-[90%] max-w-sm rounded-xl p-6 relative shadow-lg">
+      <div className="bg-white w-max max-w-sm rounded-xl p-6 relative shadow-lg h-50">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl font-bold"
+        >
+          ×
+        </button>
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-red-600"
@@ -69,7 +75,7 @@ const OTPModal = ({ visible, onClose, email }) => {
 
         <button
           onClick={handleSubmit}
-          className="bg-green-900 text-white w-full py-2 rounded-lg font-medium flex justify-center items-center"
+          className="bg-[#8C6DFD] text-white w-full py-2 rounded-lg font-medium flex justify-center items-center"
         >
           {isPending ? (
             <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

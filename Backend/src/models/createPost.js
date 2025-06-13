@@ -1,13 +1,37 @@
+// import mongoose from "mongoose";
+
+// const postSchema = new mongoose.Schema({
+//   title: { type: String, required: true },
+//   description: { type: String, required: true },
+//   price: { type: Number },
+//   picture: { type: String },
+//   author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+//   createdAt: { type: Date, default: Date.now },
+// });
+
+// const Post = mongoose.model("Post", postSchema);
+// export default Post;
 import mongoose from "mongoose";
 
-const postSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  price: { type: Number },
-  picture: { type: String },
-  author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  createdAt: { type: Date, default: Date.now },
-});
+const commentSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    text: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+);
 
-const Post = mongoose.model("Post", postSchema);
-export default Post;
+const postSchema = new mongoose.Schema(
+  {
+    title: String,
+    description: String,
+    price: Number,
+    picture: String,
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    comments: [commentSchema], // 🆕 Add comments as subdocuments
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("Post", postSchema);

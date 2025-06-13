@@ -13,13 +13,16 @@ const handleCreatePost = async (data) => {
   return res.data;
 };
 const handleDeletePost = async (data) => {
-  // console.log("Data in handleCreatePost:", data);
   const res = await api_post.delete(`/delete/${data?.id}`);
   return res.data;
 };
 
 const handleUpdatePost = async ({ formData, id }) => {
   const res = await api_post.put(`/update/${id}`, formData);
+  return res.data;
+};
+const handleAddCommentsPost = async (data) => {
+  const res = await api_post.post(`/comment/${data?.postId}`, data);
   return res.data;
 };
 
@@ -79,6 +82,26 @@ export const useDeletePost = () => {
     mutationFn: (data) => handleDeletePost(data),
     onSuccess: (data) => {
       notify(data?.message);
+      queryPO.invalidateQueries({
+        queryKey: ["posts"],
+      });
+    },
+    onError: (error) => {
+      notify(error?.response?.data?.message);
+    },
+  });
+};
+export const useAddComments = () => {
+  const queryPO = useQueryClient();
+  const notify = (message) => toast(message);
+  const { setShowComments } = useModalStore();
+
+  return useMutation({
+    mutationKey: ["comments"],
+    mutationFn: (data) => handleAddCommentsPost(data),
+    onSuccess: (data) => {
+      notify(data?.message);
+      setShowComments(true);
       queryPO.invalidateQueries({
         queryKey: ["posts"],
       });

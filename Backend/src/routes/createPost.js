@@ -23,9 +23,9 @@ router.get("/1", authenticateUser, async (req, res) => {
   const userId = req.user.userId;
 
   try {
-    const userPosts = await Post.find({ author: userId }).sort({
-      createdAt: -1,
-    });
+    const userPosts = await Post.find({ author: userId })
+      .sort({ createdAt: -1 })
+      .populate("comments.user", "username email");
 
     res.status(200).json({
       message: "Posts fetched successfully",
@@ -181,6 +181,41 @@ router.delete("/delete/:postId", authenticateUser, async (req, res) => {
     res.status(200).json({ message: "Post deleted successfully" });
   } catch (error) {
     console.error("Error deleting post:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/comment/:postId", authenticateUser, async (req, res) => {
+  const { postId } = req.params;
+  const userId = req.user.userId;
+  const { text } = req.body;
+
+  if (!text) {
+    return res.status(400).json({ error: "Comment text is required" });
+  }
+
+  try {
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const comment = {
+      user: userId,
+      text,
+      createdAt: new Date(),
+    };
+    post.comments.push(comment);
+
+    await post.save();
+
+    res.status(201).json({
+      message: "Comment added successfully",
+      comments: post.comments,
+    });
+  } catch (error) {
+    console.error("Error adding comment:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

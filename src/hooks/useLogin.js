@@ -38,6 +38,7 @@ export const useSignup = () => {
 
 export const useOtpSubmit = () => {
   const { setUser, setToken } = useAuthStore();
+  const { setOtpModalVisible } = useModalStore();
   const navigate = useNavigate();
 
   const notify = (message) => toast(message);
@@ -46,7 +47,7 @@ export const useOtpSubmit = () => {
     mutationFn: (data) => handleOtpSubmit(data),
     onSuccess: async (data) => {
       notify("Login Successful");
-
+      setOtpModalVisible(false);
       setToken(data?.token);
       setUser(data?._id);
       if (data) {
@@ -62,23 +63,12 @@ export const useOtpSubmit = () => {
 };
 
 export const useLogin = () => {
-  const { setUser, setToken } = useAuthStore();
   const { setOtpModalVisible } = useModalStore();
-  const navigate = useNavigate();
   const notify = (message) => toast(message);
   return useMutation({
     mutationKey: ["login"],
     mutationFn: (data) => handleLogin(data),
     onSuccess: async (data) => {
-      // notify("Login Successful");
-      // setToken(data?.token);
-      // setUser(data?._id);
-      // if (data) {
-      //   navigate("/Home");
-      //   LocalStorage.save("token", data?.token);
-      //   LocalStorage.save("user", data?.user);
-
-      // }
       setOtpModalVisible(true);
     },
     onError: (error) => {

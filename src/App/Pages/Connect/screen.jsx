@@ -92,7 +92,7 @@ const LoginPage = () => {
                 }
                 required
                 placeholder={"Enter you new username"}
-                className="pl-10 p-3 w-full bg-transparent text-sm border border-white rounded-lg placeholder focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4"
+                className="pl-10 p-3 w-full bg-transparent text-sm border border-white text-white rounded-lg placeholder focus:outline-none focus:ring-2 focus:ring-indigo-500 mt-4"
               />
             )}
             <FiMail className="relative left-3 top-8 transform  text-white text-lg" />
