@@ -3,11 +3,10 @@ import React from "react";
 export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const createPageList = () => {
     if (totalPages <= 10) {
-      // If pages are 10 or less, show all pages
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
 
-    const delta = 2; // pages to show around current
+    const delta = 2;
     const range = [];
     const rangeWithDots = [];
     let l;
@@ -40,7 +39,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const displayPages = createPageList();
 
   return (
-    <div className="flex flex-row justify-end items-center mx-40 mb-8">
+    <div className="flex flex-row justify-end items-center mx-40">
       {displayPages.map((page, index) =>
         page === "..." ? (
           <span

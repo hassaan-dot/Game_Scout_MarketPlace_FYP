@@ -4,14 +4,20 @@ import { api } from "../services/axios";
 import LocalStorage from "../services/local-storage";
 import { useAuthStore } from "../store/useAuthStore";
 import { useModalStore } from "../store/useModalStore";
+import { useNavigate } from "react-router-dom";
 
 const handleLogin = async (data) => {
-  const res = await api.post("/login", data);
+  console.log("123", data);
+  const res = await api.post("/send-otp", data);
   return res.data;
 };
 
 const handleSignUp = async (data) => {
   const res = await api.post("/register", data);
+  return res.data;
+};
+const handleOtpSubmit = async (data) => {
+  const res = await api.post("/verify-otp", data);
   return res.data;
 };
 
@@ -31,23 +37,71 @@ export const useSignup = () => {
   });
 };
 
-export const useLogin = () => {
+export const useOtpSubmit = () => {
   const { setUser, setToken } = useAuthStore();
+  const { setOtpModalVisible } = useModalStore();
+  const navigate = useNavigate();
 
+  const notify = (message) => toast(message);
+  return useMutation({
+    mutationKey: ["otp"],
+    mutationFn: (data) => handleOtpSubmit(data),
+    onSuccess: async (data) => {
+      notify("Login Successful");
+      setOtpModalVisible(false);
+      setToken(data?.token);
+      setUser(data?._id);
+      if (data) {
+        navigate("/Home");
+        LocalStorage.save("token", data?.token);
+        LocalStorage.save("user", data?.user);
+      }
+    },
+    onError: (error) => {
+      notify(error?.response?.data?.message || "Signup failed");
+    },
+  });
+};
+
+export const useLogin = () => {
+  const { setOtpModalVisible } = useModalStore();
   const notify = (message) => toast(message);
   return useMutation({
     mutationKey: ["login"],
     mutationFn: (data) => handleLogin(data),
     onSuccess: async (data) => {
-      notify("Login Successful");
-      console.log("data from response login is", data);
-      setToken(data?.token);
-      setUser(data?._id);
-      LocalStorage.save("token", data?.token);
-      LocalStorage.save("user", data?.user);
+      setOtpModalVisible(true);
     },
     onError: (error) => {
       notify(error?.response?.data?.message);
+    },
+  });
+};
+
+export const useGoogleLogin = () => {
+  const { setUser, setToken } = useAuthStore();
+  const navigate = useNavigate();
+  const notify = (msg) => toast(msg);
+
+  return useMutation({
+    mutationKey: ["googleLogin"],
+    mutationFn: async (token) => {
+      const res = await api.post("/googlelogin", { token });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      notify("Google Login Successful");
+
+      setToken(data?.token);
+      setUser(data?.user);
+
+      LocalStorage.save("token", data?.token);
+      LocalStorage.save("user", data?.user);
+
+      navigate("/Home");
+    },
+    onError: (err) => {
+      notify(err?.response?.data?.message || "Google Login Failed");
     },
   });
 };

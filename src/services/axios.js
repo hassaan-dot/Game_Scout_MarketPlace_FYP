@@ -1,13 +1,30 @@
 import axios from "axios";
 import LocalStorage from "./local-storage";
 
+const LOCAL_IP = "192.168.1.16";
+
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "http://localhost:3000";
+    } else {
+      return `http://${LOCAL_IP}:3000`;
+    }
+  }
+  return "http://localhost:3000";
+};
+
 const api = axios.create({
-  baseURL: process.env.API_URL_AUTH || "http://localhost:3000/api/auth",
+  baseURL: process.env.API_URL_AUTH || `${getBaseUrl()}/api/auth`,
 });
 
 const api_dashboard = axios.create({
-  baseURL:
-    process.env.API_URL_DASHBOARD || "http://localhost:3000/api/dashboard",
+  baseURL: process.env.API_URL_DASHBOARD || `${getBaseUrl()}/api/dashboard`,
+});
+
+const api_post = axios.create({
+  baseURL: process.env.API_URL_POST || `${getBaseUrl()}/api/post`,
 });
 
 const attachTokenInterceptor = (instance) => {
@@ -26,5 +43,6 @@ const attachTokenInterceptor = (instance) => {
 
 attachTokenInterceptor(api);
 attachTokenInterceptor(api_dashboard);
+attachTokenInterceptor(api_post);
 
-export { api, api_dashboard };
+export { api, api_dashboard, api_post };

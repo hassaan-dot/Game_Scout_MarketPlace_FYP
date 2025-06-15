@@ -1,11 +1,11 @@
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import multer from "multer";
 import bodyParser from "body-parser";
-import { MongoClient } from "mongodb";
+import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import multer from "multer";
 import { connectDB } from "./lib/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import CreatePost from "./routes/createPost.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import googleLogin from "./routes/google-login.js";
 
@@ -28,6 +28,7 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 
@@ -35,14 +36,13 @@ app.get("/api/auth/googlelogin", googleLogin);
 
 app.use("/api/dashboard", dashboardRoutes);
 
+app.use("/api/post", CreatePost);
+
 app.get("/", upload.single("avatar"), (req, res) => {
   res.send("Welcome to the API");
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   connectDB();
-});
-app.listen(5000, "0.0.0.0", () => {
-  console.log("API running on 0.0.0.0:5000");
 });

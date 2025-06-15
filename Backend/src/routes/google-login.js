@@ -35,15 +35,14 @@ const googleLogin = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    res.status(200).json({
-      _id: user._id,
-      email: user.email,
-      token,
-      message: "Google login successful",
-    });
+    res.redirect(
+      `http://localhost:3000/oauth-success?token=${token}&name=${encodeURIComponent(
+        name
+      )}`
+    );
   } catch (error) {
     console.error("Error during Google login:", error);
-    res.status(500).json({ message: "Internal server error." });
+    res.redirect(`http://localhost:3000/oauth-success?error=login_failed`);
   }
 };
 

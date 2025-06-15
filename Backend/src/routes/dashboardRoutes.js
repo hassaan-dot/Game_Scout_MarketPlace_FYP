@@ -169,16 +169,19 @@ router.post("/chatBot", async (req, res) => {
     if (!message) {
       return res.status(400).json({ message: "Send any message." });
     }
-
     const response = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
+      "https://api.groq.com/openai/v1/chat/completions",
       {
-        model: "deepseek/deepseek-r1:free",
+        model: "llama3-8b-8192", // <-- update here with a supported model name
         messages: [{ role: "user", content: message }],
+        temperature: 0.7,
       },
       {
         headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          Authorization: `Bearer ${
+            process.env.GROQ_API_AI_KEY ||
+            "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"
+          }`,
           "Content-Type": "application/json",
         },
       }

@@ -9,6 +9,8 @@ import {
   Connect,
 } from "./App/Pages/index";
 import { useAuthStore } from "./store/useAuthStore";
+import GoogleRedirectHandler from "./services/googleHandler";
+import OAuthSuccess from "./auth/authSuccess";
 
 const App = () => {
   const { token } = useAuthStore();
@@ -23,13 +25,23 @@ const App = () => {
         {token && <Navbar />}
 
         <Routes>
+          {/* <Route
+            path="/api/auth/googlelogin"
+            element={<GoogleRedirectHandler />}
+          /> */}
+
+          <Route path="/oauth-success" element={<OAuthSuccess />} />
+
           {!token && <Route path="/Connect" element={<Connect />} />}
 
           {token && (
             <>
               <Route path="/Home" element={<Home />} />
-              <Route path="/CreatePosts" element={<CreatePosts />} />
+
+              <Route path="/createPosts/:edit" element={<CreatePosts />} />
+
               <Route path="/Profile" element={<Profile />} />
+
               <Route path="/create-campaign" element={<CreateCampaign />} />
             </>
           )}

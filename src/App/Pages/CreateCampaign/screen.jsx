@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-// import { ethers } from 'ethers';
+import React, { useState } from "react";
 import { createCampaign } from "../../Resources/assets";
-// import { useStateContext } from '../../context/index';
 import { CountBox, CustomButton, Loader } from "../../Components/index";
-import { calculateBarPercentage, daysLeft } from "../../Resources/utils/index";
 import thirdweb from "../../Resources/assets/thirdweb.png";
+import { calculateBarPercentage, daysLeft } from "../../Resources/utils/index";
 
 const Screen = () => {
   const [state, setState] = useState("");
@@ -15,25 +12,6 @@ const Screen = () => {
   const [donators, setDonators] = useState([]);
 
   const remainingDays = daysLeft(state?.deadline);
-
-  //   const fetchDonators = async () => {
-  //     const data = await getDonations(state.pId);
-
-  //     setDonators(data);
-  //   }
-
-  //   useEffect(() => {
-  //     if(contract) fetchDonators();
-  //   }, [contract, address])
-
-  //   const handleDonate = async () => {
-  //     setIsLoading(true);
-
-  //     await donate(state.pId, amount);
-
-  //     navigate('/')
-  //     setIsLoading(false);
-  //   }
 
   return (
     <div>

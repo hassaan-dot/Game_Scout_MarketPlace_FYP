@@ -13,7 +13,6 @@ const Home = () => {
     isSearching,
     searchingInput,
     setSearchIndex,
-    searchingIndex,
     setIsSearching,
     mutateVariable,
   } = useModalStore();
@@ -23,6 +22,10 @@ const Home = () => {
   const { mutate, isPending, error } = useGetData();
 
   const { mutate: searching } = useSearchBar();
+
+  const firstProduct = allData?.data[0];
+
+  const remainingProducts = allData?.data.slice(1);
 
   useEffect(() => {
     mutate(1);
@@ -70,8 +73,11 @@ const Home = () => {
         </div>
       ) : (
         <div className="flex flex-wrap gap-6 mt-10 mb-10 px-4">
-          {allData && allData.data.length > 0 ? (
-            allData.data.map((product) => (
+          <div className="w-full">
+            <ContentCard content={firstProduct} isFeatured />
+          </div>
+          {allData && allData?.data?.length > 0 ? (
+            remainingProducts.map((product) => (
               <div key={product.id} className="m-0">
                 <ContentCard content={product} />
               </div>
