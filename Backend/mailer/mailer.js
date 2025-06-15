@@ -10,10 +10,10 @@ const transporter = nodemailer.createTransport({
 
 export const sendOtpEmail = async (to, otp) => {
   await transporter.sendMail({
-    from: `"Your App Name" <${process.env.EMAIL}>`,
+    from: `"Games MarketPlace" <${process.env.EMAIL}>`,
     to,
-    subject: "Your OTP Code",
-    text: `Your OTP code is: ${otp}`,
+    subject: "Verification OTP Code",
+    text: ` Verification OTP Code is : ${otp}`,
     html: `<p>Your OTP code is: <b>${otp}</b></p>`,
   });
 };

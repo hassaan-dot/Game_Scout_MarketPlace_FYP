@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { useLogin, useSignup } from "../../../hooks/useLogin.js";
-import { useModalStore } from "../../../store/useModalStore.js";
+import { FiArrowLeft, FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 import ClipLoader from "react-spinners/ClipLoader";
-import { FiEye, FiEyeOff, FiMail, FiUser, FiArrowLeft } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { useLogin, useSignup } from "../../../hooks/useLogin.js";
+import { getGoogleOAuthURL } from "../../../services/googleConsents.js";
+import { useModalStore } from "../../../store/useModalStore.js";
 import OTPModal from "../../Components/otpModal/component.jsx";
-
 const LoginPage = () => {
   const { mutate: handleUserLogin, isPending, isPaused } = useLogin();
-
-  const nav = useNavigate();
 
   const { mutate: handleUserSignUp } = useSignup();
 
@@ -22,6 +19,7 @@ const LoginPage = () => {
     email: "",
     password: "",
     username: "",
+    role: "",
   });
   const Connect = () => {
     if (IsRegister) {
@@ -31,7 +29,11 @@ const LoginPage = () => {
         username: formData?.username,
       });
     } else {
-      handleUserLogin({ email: formData?.email, password: formData?.password });
+      handleUserLogin({
+        email: formData?.email,
+        password: formData?.password,
+        role: formData?.role,
+      });
     }
   };
 
@@ -49,6 +51,10 @@ const LoginPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form Submitted", formData);
+  };
+
+  const handleLogin = () => {
+    window.location.href = getGoogleOAuthURL();
   };
 
   return (
@@ -76,6 +82,30 @@ const LoginPage = () => {
                 ? "First! Create your account"
                 : "Welcome Back, you have been missed!"}
             </h4>
+          </div>
+          <div className="flex gap-4 mb-4">
+            <button
+              type="button"
+              onClick={() => handleChange("role", "user")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                formData.role === "user"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-white text-indigo-600"
+              }`}
+            >
+              User
+            </button>
+            <button
+              type="button"
+              onClick={() => handleChange("role", "admin")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                formData?.role === "admin"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-white text-indigo-600"
+              }`}
+            >
+              Admin
+            </button>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col">
@@ -188,6 +218,21 @@ const LoginPage = () => {
               </div>
             )}
           </form>
+          <div className="flex flex-col justify-center items-center md:w-[180px] bg-white bg-opacity-10 rounded-xl p-4 text-white mx-auto mt-6">
+            <p className="text-sm mb-4">Or sign in with</p>
+            <button
+              type="button"
+              onClick={() => handleLogin()}
+              className="flex items-center gap-2 border border-white text-white px-4 py-2 rounded-md hover:bg-white hover:text-black transition"
+            >
+              <img
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              Google
+            </button>
+          </div>
         </div>
       </div>
       {otpModalVisible && (

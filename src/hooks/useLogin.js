@@ -7,6 +7,7 @@ import { useModalStore } from "../store/useModalStore";
 import { useNavigate } from "react-router-dom";
 
 const handleLogin = async (data) => {
+  console.log("123", data);
   const res = await api.post("/send-otp", data);
   return res.data;
 };
@@ -73,6 +74,34 @@ export const useLogin = () => {
     },
     onError: (error) => {
       notify(error?.response?.data?.message);
+    },
+  });
+};
+
+export const useGoogleLogin = () => {
+  const { setUser, setToken } = useAuthStore();
+  const navigate = useNavigate();
+  const notify = (msg) => toast(msg);
+
+  return useMutation({
+    mutationKey: ["googleLogin"],
+    mutationFn: async (token) => {
+      const res = await api.post("/googlelogin", { token });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      notify("Google Login Successful");
+
+      setToken(data?.token);
+      setUser(data?.user);
+
+      LocalStorage.save("token", data?.token);
+      LocalStorage.save("user", data?.user);
+
+      navigate("/Home");
+    },
+    onError: (err) => {
+      notify(err?.response?.data?.message || "Google Login Failed");
     },
   });
 };
