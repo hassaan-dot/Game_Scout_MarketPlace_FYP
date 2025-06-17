@@ -1,31 +1,25 @@
-import React from "react";
-import { Images } from "../../Resources/Images";
-import { useModalStore } from "../../../store/useModalStore";
+import React, { useState } from "react";
+import { FiEdit, FiTrash } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useModalStore } from "../../../store/useModalStore";
 import CommentsModal from "../commentsModal/component";
-import { useAddComments } from "../../../hooks/usePosts";
 
 const PostCard = ({
   username,
-  userAvatar,
   title,
   description,
   onClickDel,
   price,
   object,
   postImage,
+  AuthorId,
+  comments,
   id,
 }) => {
-  const {
-    setEditData,
-    setEditActive,
-    editActive,
-    setShowComments,
-    showComments,
-  } = useModalStore();
+  const { setEditData, setEditActive, editActive } = useModalStore();
   const navigate = useNavigate();
+  const [showComments, setShowComments] = useState(false); // local state
 
-  const { mutate: handleAddComments } = useAddComments();
   return (
     <>
       <div className="rounded-2xl shadow-md w-70 mb-6 ml-10 border border-[#2c2f32]">
@@ -34,28 +28,30 @@ const PostCard = ({
             <img
               src={`http://localhost:3000/uploads/${postImage}`}
               alt={username}
-              className="w-10 h-10 rounded-full mr-3 "
+              className="w-10 h-10 rounded-full mr-3"
             />
             <span className="font-semibold text-white">{username}</span>
           </div>
-          <div>
-            <button
-              onClick={() => {
-                setEditData(object);
-                setEditActive(true);
-                navigate(`/CreatePosts/${true}`);
-              }}
-              className="bg-[#4acd8d] hover:bg-red-700 text-white px-3 py-1 text-sm rounded-full mr-2"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => onClickDel(id)}
-              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 text-sm rounded-full"
-            >
-              Delete
-            </button>
-          </div>
+          {AuthorId === object?.author?._id && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setEditData(object);
+                  setEditActive(true);
+                  navigate(`/CreatePosts/${true}`);
+                }}
+                className="bg-[#4acd8d] hover:bg-green-700 text-white px-3 py-1 text-sm rounded"
+              >
+                <FiEdit />
+              </button>
+              <button
+                onClick={() => onClickDel(id)}
+                className="bg-red-500 hover:bg-red-700 text-white px-3 py-1 text-sm rounded"
+              >
+                <FiTrash />
+              </button>
+            </div>
+          )}
         </div>
 
         <img
@@ -84,7 +80,7 @@ const PostCard = ({
 
       {showComments && (
         <CommentsModal
-          comments={object?.comments || []}
+          comments={comments || []}
           visible={showComments}
           id={id}
           onClose={() => setShowComments(false)}

@@ -43,8 +43,10 @@ const Profile = () => {
               object={post}
               key={post._id}
               id={post._id}
-              username={User?.username || "Anonymous"}
+              comments={post?.comments}
+              username={post?.author?.username || "Anonymous"}
               userAvatar=""
+              AuthorId={User?._id || "Unknown"}
               price={post?.price || "0"}
               postImage={post?.picture}
               title={post?.title || "No Title"}

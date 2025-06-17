@@ -36,13 +36,13 @@ const googleLogin = async (req, res) => {
     const token = generateToken(user._id);
 
     res.redirect(
-      `http://localhost:3000/oauth-success?token=${token}&name=${encodeURIComponent(
+      `http://localhost:3001/oauth-success?token=${token}&name=${encodeURIComponent(
         name
       )}`
     );
   } catch (error) {
     console.error("Error during Google login:", error);
-    res.redirect(`http://localhost:3000/oauth-success?error=login_failed`);
+    res.redirect(`http://localhost:3001/oauth-success?error=login_failed`);
   }
 };
 

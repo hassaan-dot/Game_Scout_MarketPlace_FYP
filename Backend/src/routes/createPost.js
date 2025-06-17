@@ -20,19 +20,18 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.get("/1", authenticateUser, async (req, res) => {
-  const userId = req.user.userId;
-
   try {
-    const userPosts = await Post.find({ author: userId })
+    const allPosts = await Post.find()
       .sort({ createdAt: -1 })
+      .populate("author", "username email")
       .populate("comments.user", "username email");
 
     res.status(200).json({
-      message: "Posts fetched successfully",
-      posts: userPosts,
+      message: "All posts fetched successfully",
+      posts: allPosts,
     });
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error("Error fetching all posts:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -129,7 +128,6 @@ router.put(
       if (price && isNaN(price)) {
         return res.status(400).json({ error: "Price must be a valid number" });
       }
-      // Update fields
       if (title) post.title = title;
       if (description) post.description = description;
       if (price) post.price = price;

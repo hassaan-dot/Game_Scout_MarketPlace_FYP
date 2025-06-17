@@ -25,12 +25,12 @@ const App = () => {
         {token && <Navbar />}
 
         <Routes>
-          {/* <Route
+          <Route
             path="/api/auth/googlelogin"
             element={<GoogleRedirectHandler />}
-          /> */}
+          />
 
-          <Route path="/oauth-success" element={<OAuthSuccess />} />
+          {/* <Route path="/oauth-success" element={<OAuthSuccess />} /> */}
 
           {!token && <Route path="/Connect" element={<Connect />} />}
 

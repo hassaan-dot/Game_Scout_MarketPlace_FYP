@@ -71,6 +71,7 @@ export const useLogin = () => {
     mutationFn: (data) => handleLogin(data),
     onSuccess: async (data) => {
       setOtpModalVisible(true);
+      notify("OTP sent to your email");
     },
     onError: (error) => {
       notify(error?.response?.data?.message);
@@ -86,7 +87,7 @@ export const useGoogleLogin = () => {
   return useMutation({
     mutationKey: ["googleLogin"],
     mutationFn: async (token) => {
-      const res = await api.post("/googlelogin", { token });
+      const res = await api.get("/googlelogin", { token });
       return res.data;
     },
     onSuccess: (data) => {
