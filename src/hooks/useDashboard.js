@@ -48,6 +48,10 @@ export const useChatBot = () => {
     },
   });
 };
+const handleuseTabBar = async (data) => {
+  const res = await api_dashboard.post(`/search/${1}`, data);
+  return res.data;
+};
 
 export const useSearchBar = () => {
   const { setallData, setIsSearching, searchIndex, searchingInput } =
@@ -57,10 +61,27 @@ export const useSearchBar = () => {
   return useMutation({
     mutationKey: ["search"],
     mutationFn: (data) => handleSearch(searchingInput, searchIndex),
+
     onSuccess: async (data) => {
-      console.log("Search data:", data);
       setallData(data);
       setIsSearching(true);
+    },
+    onError: (error) => {
+      notify(error?.response?.data?.message);
+    },
+  });
+};
+
+export const useTabBar = () => {
+  const { setallData } = useModalStore();
+
+  const notify = (message) => toast(message);
+  return useMutation({
+    mutationKey: ["tabs"],
+    mutationFn: (data) => handleuseTabBar(data),
+    onSuccess: async (data) => {
+      setallData(data);
+      notify(data);
     },
     onError: (error) => {
       notify(error?.response?.data?.message);

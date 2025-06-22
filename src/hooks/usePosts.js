@@ -9,11 +9,12 @@ const handleGetAlLPosts = async (data) => {
   return res.data;
 };
 const handleCreatePost = async (data) => {
+  // console.log("data", data);
   const res = await api_post.post(`/new`, data);
   return res.data;
 };
 const handleDeletePost = async (data) => {
-  const res = await api_post.delete(`/delete/${data?.id}`);
+  const res = await api_post.delete(`/delete`, { data });
   return res.data;
 };
 

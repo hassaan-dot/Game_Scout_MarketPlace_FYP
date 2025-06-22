@@ -4,8 +4,12 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useCreatePost, useUpdatePost } from "../../../hooks/usePosts";
 import { useModalStore } from "../../../store/useModalStore";
 import { CustomButton, FormField } from "../../Components/index";
+import LocalStorage from "../../../services/local-storage";
 
 const CreatePost = () => {
+  const User = LocalStorage.get("user");
+  console.log("user id", User?._id);
+
   const { mutate: createPost, isPending } = useCreatePost();
 
   const { mutate: updatePost } = useUpdatePost();
@@ -23,6 +27,7 @@ const CreatePost = () => {
     description:
       isEditMode && editData?.description ? editData.description : "",
     price: isEditMode && editData?.price ? editData.price : "",
+    userId: User?._id,
     image:
       isEditMode && editData?.picture
         ? `http://localhost:3000/uploads/${editData.picture}`
@@ -71,6 +76,8 @@ const CreatePost = () => {
     formData.append("title", form.title);
     formData.append("description", form.description);
     formData.append("price", form.price);
+    formData.append("userId", form.userId);
+    // formData.append("userId", form?.userId);
     if (form.imageFile) {
       formData.append("picture", form.imageFile);
     }
@@ -78,6 +85,9 @@ const CreatePost = () => {
     if (isEditMode && editData?._id) {
       updatePost({ formData, id: editData._id });
     } else {
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
+      }
       createPost(formData);
     }
   };

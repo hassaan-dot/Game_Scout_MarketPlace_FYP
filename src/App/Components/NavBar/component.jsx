@@ -1,20 +1,27 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useSearchBar } from "../../../hooks/useDashboard";
+import { useSearchBar, useTabBar } from "../../../hooks/useDashboard";
 import LocalStorage from "../../../services/local-storage";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { useModalStore } from "../../../store/useModalStore";
 import { logo, menu, search, thirdweb } from "../../Resources/assets/index";
 import { navlinks } from "../../Resources/constants";
+import {
+  FaXbox,
+  FaPlaystation,
+  FaWindows,
+  FaGamepad,
+  FaDashcube,
+} from "react-icons/fa";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const notify = (message) => toast(message);
 
-  const [isActive, setIsActive] = useState("dashboard");
+  const [isActive, setIsActive] = useState("ALL");
 
   const [toggleDrawer, setToggleDrawer] = useState(false);
 
@@ -28,7 +35,8 @@ const Navbar = () => {
 
   const searchRef = useRef(null);
 
-  const { mutate, isPending } = useSearchBar();
+  const { mutate, isPending: SearchBarPending } = useSearchBar();
+  const { mutate: tabsSearch, isPending: tabsSearchPending } = useTabBar();
 
   const {
     setSearchingInput,
@@ -38,13 +46,28 @@ const Navbar = () => {
     searchingInput,
     setMutateVariable,
     searchBarActive,
+    setSearchPending,
+    setTabsSearchingPending,
+    tabBarActive,
+    mutateVariable,
   } = useModalStore();
+
+  useEffect(() => {
+    setSearchPending(SearchBarPending);
+    setTabsSearchingPending(tabsSearchPending);
+  }, [SearchBarPending, tabsSearchPending]);
 
   const allCampaigns = useMemo(
     () => ["Lowest Price", "High Ratings", "Ps5", "Discounted", "Ps4"],
     []
   );
-
+  const tabs = [
+    { label: "ALL", value: "ALL", icon: <FaDashcube /> },
+    { label: "Xbox", value: "Xbox", icon: <FaXbox /> },
+    { label: "PS4", value: "ps4", icon: <FaPlaystation /> },
+    { label: "PC", value: "pc", icon: <FaWindows /> },
+    { label: "Switch", value: "switch", icon: <FaGamepad /> },
+  ];
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -92,6 +115,14 @@ const Navbar = () => {
     setShowSuggestions(false);
   };
 
+  const handleTabClick = (item) => {
+    const data = {
+      input: item,
+    };
+    if (data) {
+      tabsSearch(data);
+    }
+  };
   return (
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div ref={searchRef} className=" lg:flex-1 flex flex-col max-w-[458px]">
@@ -136,7 +167,9 @@ const Navbar = () => {
             {suggestions?.map((item, index) => (
               <button
                 key={index}
-                onClick={() => handleSuggestionClick(item)}
+                onClick={() => {
+                  handleSuggestionClick(item);
+                }}
                 className="flex-shrink-0 bg-[#4acd8d] text-[#0f0f10] font-semibold rounded-full px-4 py-1 text-sm hover:bg-[#36b16a] transition"
               >
                 {item}
@@ -145,6 +178,49 @@ const Navbar = () => {
           </div>
         )}
       </div>
+      {tabBarActive && (
+        <div className="relative mt-1 w-[450px] mx-auto">
+          <div className="flex space-x-3 overflow-x-auto rounded-3xl scrollbar-hide bg-[#1c1c24] px-6 py-1 ">
+            {tabs.map(({ label, value, icon }) => (
+              <div
+                key={value}
+                className="relative flex flex-col items-center min-w-max ml-2 mt-2"
+              >
+                <button
+                  onClick={() => {
+                    if (label === "ALL") {
+                      setIsActive(value);
+
+                      setMutateVariable(!mutateVariable);
+                    } else if (isActive === value) {
+                    } else {
+                      handleTabClick(value);
+                      setIsActive(value);
+                    }
+                  }}
+                  className={`flex items-center gap-2 px-4 py-1 rounded-full text-sm font-semibold transition ${
+                    isActive === value
+                      ? "bg-[#4acd8d] text-[#0f0f10]"
+                      : "bg-transparent text-white hover:bg-[#4acd8d] hover:text-[#0f0f10]"
+                  }`}
+                >
+                  <span className="text-base">{icon}</span>
+                  <span>{label}</span>
+                </button>
+
+                <div
+                  className="h-1 w-6 mt-1 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor:
+                      isActive === value ? "#4acd8d" : "transparent",
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="sm:hidden flex justify-between items-center relative">
         <div className="w-[40px] h-[40px] rounded-[10px] bg-[#2c2f32] flex justify-center items-center cursor-pointer">
           <img
@@ -212,7 +288,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
-      <div className=" sm:flex hidden flex-row justify-end items-center gap-4 ">
+      <div className=" sm:flex hidden relative flex-row justify-end items-center gap-4 ">
         <Link to="/profile">
           <div className="w-[40px] h-[40px] rounded-full bg-[#2c2f32] flex justify-center items-center cursor-pointer">
             <img

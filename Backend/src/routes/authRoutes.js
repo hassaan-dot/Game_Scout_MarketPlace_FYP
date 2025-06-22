@@ -9,7 +9,7 @@ dotenv.config();
 const router = express.Router();
 
 const generateOTP = () => {
-  return Math.floor(1000 + Math.random() * 9000).toString(); // Generates a 4-digit string like "4829"
+  return Math.floor(1000 + Math.random() * 9000).toString(); 
 };
 
 const generateToken = (userId) => {
@@ -106,7 +106,7 @@ router.post("/send-otp", async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found." });
 
     const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
+    const otpExpires = new Date(Date.now() + 5 * 60 * 1000); 
 
     user.otp = otp;
     user.otpExpires = otpExpires;

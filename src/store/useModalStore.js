@@ -10,6 +10,9 @@ export const useModalStore = create((set) => ({
   allData: null,
   setallData: (allData) => set({ allData }),
 
+  detailData: "",
+  setDetailData: (detailData) => set({ detailData }),
+
   isSearching: false,
   setIsSearching: (isSearching) => set({ isSearching }),
 
@@ -36,4 +39,14 @@ export const useModalStore = create((set) => ({
 
   showComments: false,
   setShowComments: (showComments) => set({ showComments }),
+
+  searchingPending: false,
+  setSearchPending: (searchingPending) => set({ searchingPending }),
+
+  tabsSearchingPending: false,
+  setTabsSearchingPending: (tabsSearchingPending) =>
+    set({ tabsSearchingPending }),
+
+  tabBarActive: false,
+  setTabBarActive: (tabBarActive) => set({ tabBarActive }),
 }));

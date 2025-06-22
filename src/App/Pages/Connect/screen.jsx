@@ -60,6 +60,7 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     window.location.href = getGoogleOAuthURL();
+    // console.log((window.Location.href = getGoogleOAuthURL()));
   };
 
   return (

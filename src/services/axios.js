@@ -27,13 +27,43 @@ const api_post = axios.create({
   baseURL: process.env.API_URL_POST || `${getBaseUrl()}/api/post`,
 });
 
+// const attachTokenInterceptor = (instance) => {
+//   instance.interceptors.request.use(
+//     async (config) => {
+//       const token = await LocalStorage.get("token");
+//       if (token && config.headers) {
+//         config.headers.Authorization = `Bearer ${token}`;
+//         config.headers.Accept = "multipart/form-data";
+//       }
+//       return config;
+//     },
+//     (error) => Promise.reject(error)
+//   );
+// };
+// const attachTokenInterceptor = (instance) => {
+//   instance.interceptors.request.use(
+//     async (config) => {
+//       const token = await LocalStorage.get("token");
+//       if (token && config.headers) {
+//         config.headers.Authorization = `Bearer ${token}`;
+//         config.headers.Accept = "application/json";
+//       }
+//       return config;
+//     },
+//     (error) => Promise.reject(error)
+//   );
+// };
+
 const attachTokenInterceptor = (instance) => {
   instance.interceptors.request.use(
-    async (config) => {
-      const token = await LocalStorage.get("token");
+    (config) => {
+      const token = LocalStorage.get("token"); // ✅ DO NOT use async/await here
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
-        config.headers.Accept = "multipart/form-data";
+        config.headers.Accept = "application/json";
+        console.log("✅ Token attached:", token); // ✅ Debug here
+      } else {
+        console.log("⛔ No token in localStorage");
       }
       return config;
     },

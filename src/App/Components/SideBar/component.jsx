@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useNavigation } from "react-router-dom";
 import { toast } from "react-toastify";
 import LocalStorage from "../../../services/local-storage";
 import { useAuthStore } from "../../../store/useAuthStore";
@@ -36,10 +36,13 @@ const Sidebar = () => {
     setSearchBarActive,
     setIsSearching,
     setSearchingInput,
+    setTabBarActive,
   } = useModalStore();
+  // const navigate=useNavigation()
 
   useEffect(() => {
     if (location.pathname === "/Home") {
+      setTabBarActive(true);
       setSearchBarActive(true);
     }
   }, [location.pathname, setSearchBarActive]);
@@ -63,13 +66,15 @@ const Sidebar = () => {
 
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh]">
-      <div>
-        <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
-      </div>
+      <button onClick={() => navigate("/Home")}>
+        <div>
+          <Icon styles="w-[52px] h-[52px] bg-[#2c2f32]" imgUrl={logo} />
+        </div>
+      </button>
 
       <div className="flex-1 flex flex-col justify-between items-center bg-[#1c1c24] rounded-[20px] w-[76px] py-4 mt-12">
         <div className="flex flex-col justify-center items-center gap-3">
-          {sortedNavLinks.map((link) => (
+          {sortedNavLinks?.map((link) => (
             <Icon
               key={link.name}
               {...link}
@@ -87,12 +92,14 @@ const Sidebar = () => {
                   navigate("/login");
                 } else if (link.name === "Home") {
                   navigate("/Home");
+                  setTabBarActive(true);
                   setSearchBarActive(true);
                 } else if (link.name !== "Home" && !link.disabled) {
                   navigate(link.link);
                   setSearchingInput("");
                   setSearchBarActive(false);
                   setIsSearching(false);
+                  setTabBarActive(false);
                 }
               }}
             />

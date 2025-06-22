@@ -4,8 +4,11 @@ import { icons } from "../../Resources/Icons/icons";
 import { useGetData, useSearchBar } from "../../../hooks/useDashboard";
 import { useModalStore } from "../../../store/useModalStore";
 import ChatBotPopup from "../../Components/chatBotPopUp/component";
-import { ContentCard } from "../../Components/index";
+import { ContentCard, Loader } from "../../Components/index";
 import { Pagination } from "../../Components/pagination/component";
+import { useAsyncError } from "react-router-dom";
+import Gamedetails from "../../Components/gameDetails/component";
+import { FiArrowLeft, FiEye, FiEyeOff, FiMail, FiUser } from "react-icons/fi";
 
 const Home = () => {
   const {
@@ -15,18 +18,20 @@ const Home = () => {
     setSearchIndex,
     setIsSearching,
     mutateVariable,
+    searchPending,
+    setDetailData,
+    tabsSearchingPending,
+    detailData,
   } = useModalStore();
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   const { mutate, isPending, error } = useGetData();
 
+  const [detailView, setDetailView] = useState(false);
+
   const { mutate: searching } = useSearchBar();
-
-  const firstProduct = allData?.data[0];
-
-  const remainingProducts = allData?.data.slice(1);
-
+  console.log("detail Data", detailData);
   useEffect(() => {
     mutate(1);
   }, [mutateVariable]);
@@ -58,36 +63,58 @@ const Home = () => {
     }
   };
 
+  const detailDataFunc = (item) => {
+    setDetailView(true);
+    setDetailData(item);
+  };
+
   return (
     <div>
-      {allData && allData.totalPages > 1 && !isPending && (
+      {!detailView && allData && allData.totalPages > 1 && !isPending && (
         <Pagination
           onPageChange={onPageChangeFunction}
           currentPage={allData?.currentPage}
           totalPages={allData?.totalPages}
         />
       )}
-      {isPending ? (
-        <div className="flex justify-center items-center h-screen">
-          <ClipLoader color="#ccc" size={60} />
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-6 mt-10 mb-10 px-4">
-          <div className="w-full">
-            <ContentCard content={firstProduct} isFeatured />
-          </div>
-          {allData && allData?.data?.length > 0 ? (
-            remainingProducts.map((product) => (
-              <div key={product.id} className="m-0">
-                <ContentCard content={product} />
-              </div>
-            ))
+      {!detailView && (
+        <div>
+          {isPending || searchPending || tabsSearchingPending ? (
+            <div className="flex justify-center items-center h-screen">
+              <ClipLoader color="#ccc" size={60} />
+            </div>
           ) : (
-            <div className="w-full text-center text-gray-500 mt-20 mb-20">
-              No Data Found
+            <div className="flex flex-wrap gap-6 mt-10 mb-10 px-4">
+              {/* <div className="w-full">
+            <ContentCard content={firstProduct} isFeatured />
+          </div> */}
+              {allData && allData?.data?.length > 0 ? (
+                allData?.data?.map((product) => (
+                  <div key={product.id} className="m-0">
+                    <ContentCard content={product} onClick={detailDataFunc} />
+                  </div>
+                ))
+              ) : (
+                <div className="w-full text-center text-gray-500 mt-20 mb-20">
+                  No Data Found
+                </div>
+              )}
             </div>
           )}
         </div>
+      )}
+      {detailView && (
+        <>
+          <button
+            onClick={() => {
+              setDetailView(false);
+            }}
+            className="mb-4"
+          >
+            <FiArrowLeft className="text-white w-6 h-6 cursor-pointer" />
+          </button>
+          <Gamedetails />
+        </>
       )}
       {isChatOpen && (
         <div className="m-20">

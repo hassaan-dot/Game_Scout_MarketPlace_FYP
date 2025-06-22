@@ -16,7 +16,15 @@ const Profile = () => {
   const { data, isPending } = useGetAllPosts();
 
   const onClickFunc = (id) => {
-    deletePost({ id: id });
+    console.log("id", id);
+    // data = {
+    //   postId: id,
+    //   userId: User?._id,
+    // };
+    deletePost({
+      postId: id,
+      userId: User?._id,
+    });
   };
 
   useEffect(() => {
@@ -37,6 +45,8 @@ const Profile = () => {
         </div>
       ) : (
         <div className="flex w-full flex-wrap gap-10 mt-10">
+          {console.log("checking2,", User)}
+
           {data?.posts?.map((post) => (
             <PostCard
               onClickDel={onClickFunc}
