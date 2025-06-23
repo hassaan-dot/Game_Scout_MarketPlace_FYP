@@ -94,6 +94,14 @@ router.post("/search/:page", async (req, res) => {
       "catalog-game-support 10",
     ];
 
+    const platformAliases = {
+      xbox: ["xboxone", "xbox series x"],
+      ps4: ["ps4"],
+      ps5: ["ps5"],
+      switch: ["switch"],
+      pc: ["pc"],
+    };
+
     if (input === "lowest price") {
       totalItems = await collection.countDocuments({
         price: { $exists: true },
@@ -119,17 +127,18 @@ router.post("/search/:page", async (req, res) => {
         $expr: { $lt: ["$price", "$originalPrice"] },
       });
       data = await collection
-        .find({
-          $expr: { $lt: ["$price", "$originalPrice"] },
-        })
+        .find({ $expr: { $lt: ["$price", "$originalPrice"] } })
         .skip(skip)
         .limit(pageSize)
         .toArray();
-    } else if (["ps5", "ps4"].includes(input)) {
+    } else if (Object.keys(platformAliases).includes(input)) {
+      const platforms = platformAliases[input];
       const query = {
-        $or: gameSupportFields.map((field) => ({
-          [field]: { $regex: new RegExp(`^${input}$`, "i") },
-        })),
+        $or: gameSupportFields.flatMap((field) =>
+          platforms.map((platform) => ({
+            [field]: { $regex: new RegExp(`^${platform}$`, "i") },
+          }))
+        ),
       };
       totalItems = await collection.countDocuments(query);
       data = await collection.find(query).skip(skip).limit(pageSize).toArray();
@@ -154,12 +163,115 @@ router.post("/search/:page", async (req, res) => {
       data,
     });
   } catch (err) {
-    console.error(" Search failed:", err);
+    console.error("Search failed:", err);
     res
       .status(500)
       .json({ error: "Search failed due to internal server error" });
   }
 });
+
+// router.post("/search/:page", async (req, res) => {
+//   try {
+//     if (!collection) {
+//       return res.status(500).json({ error: "Database not connected" });
+//     }
+
+//     const page = parseInt(req.params.page);
+//     const pageSize = 20;
+
+//     if (isNaN(page) || page < 1) {
+//       return res.status(400).json({ error: "Page must be a positive integer" });
+//     }
+
+//     const input = req.body.input?.toLowerCase().trim();
+//     if (!input || input.length < 2) {
+//       return res
+//         .status(400)
+//         .json({ error: "Input string is too short or missing" });
+//     }
+
+//     const skip = (page - 1) * pageSize;
+//     let data, totalItems;
+
+//     const gameSupportFields = [
+//       "catalog-game-support",
+//       "catalog-game-support 2",
+//       "catalog-game-support 3",
+//       "catalog-game-support 4",
+//       "catalog-game-support 5",
+//       "catalog-game-support 6",
+//       "catalog-game-support 7",
+//       "catalog-game-support 8",
+//       "catalog-game-support 9",
+//       "catalog-game-support 10",
+//     ];
+
+//     if (input === "lowest price") {
+//       totalItems = await collection.countDocuments({
+//         price: { $exists: true },
+//       });
+//       data = await collection
+//         .find({ price: { $exists: true } })
+//         .sort({ price: 1 })
+//         .skip(skip)
+//         .limit(pageSize)
+//         .toArray();
+//     } else if (input === "high ratings") {
+//       totalItems = await collection.countDocuments({
+//         rating: { $exists: true },
+//       });
+//       data = await collection
+//         .find({ rating: { $exists: true } })
+//         .sort({ rating: -1 })
+//         .skip(skip)
+//         .limit(pageSize)
+//         .toArray();
+//     } else if (input === "discounted") {
+//       totalItems = await collection.countDocuments({
+//         $expr: { $lt: ["$price", "$originalPrice"] },
+//       });
+//       data = await collection
+//         .find({
+//           $expr: { $lt: ["$price", "$originalPrice"] },
+//         })
+//         .skip(skip)
+//         .limit(pageSize)
+//         .toArray();
+//     } else if (["ps5", "ps4"].includes(input)) {
+//       const query = {
+//         $or: gameSupportFields.map((field) => ({
+//           [field]: { $regex: new RegExp(`^${input}$`, "i") },
+//         })),
+//       };
+//       totalItems = await collection.countDocuments(query);
+//       data = await collection.find(query).skip(skip).limit(pageSize).toArray();
+//     } else {
+//       const searchFields = ["name", "catalog-shop-name", ...gameSupportFields];
+//       const query = {
+//         $or: searchFields.map((field) => ({
+//           [field]: { $regex: input, $options: "i" },
+//         })),
+//       };
+//       totalItems = await collection.countDocuments(query);
+//       data = await collection.find(query).skip(skip).limit(pageSize).toArray();
+//     }
+
+//     const totalPages = Math.ceil(totalItems / pageSize);
+
+//     res.json({
+//       currentPage: page,
+//       totalPages,
+//       pageSize,
+//       totalItems,
+//       data,
+//     });
+//   } catch (err) {
+//     console.error(" Search failed:", err);
+//     res
+//       .status(500)
+//       .json({ error: "Search failed due to internal server error" });
+//   }
+// });
 
 router.post("/chatBot", async (req, res) => {
   try {

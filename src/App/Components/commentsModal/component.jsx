@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAddComments } from "../../../hooks/usePosts";
 import LocalStorage from "../../../services/local-storage";
 import ClipLoader from "react-spinners/ClipLoader";
+import { icons } from "../../Resources/Icons/icons";
 
 const CommentsModal = ({
   visible,
@@ -14,7 +15,7 @@ const CommentsModal = ({
   const [newComment, setNewComment] = useState("");
   const { mutate: handleAddComments, isPending } = useAddComments();
 
-  const currentUserId = User?._id || "Anonymous";
+  const currentUserId = User?._id || "undefined";
 
   if (!visible) return null;
 
@@ -23,13 +24,12 @@ const CommentsModal = ({
       postId: id,
       text: newComment.trim(),
     });
-
     setNewComment("");
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div className="bg-white w-full h-full md:w-[600px] md:h-[85%] rounded-none md:rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col">
+      <div className="bg-[#ccc] w-full h-full md:w-[600px] md:h-[85%] rounded-none md:rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold"
@@ -51,19 +51,55 @@ const CommentsModal = ({
               return (
                 <div
                   key={index}
-                  className={`flex ${
+                  className={`flex items-center gap-3 m-2 ${
                     isCurrentUser ? "justify-end" : "justify-start"
-                  } m-2 mb-4`}
+                  }`}
                 >
-                  <div
-                    className={`p-3 max-w-[80%] rounded-lg text-sm shadow-md ${
-                      isCurrentUser
-                        ? "bg-blue-100 text-blue-800 rounded-br-none"
-                        : "bg-gray-100 text-gray-800 rounded-bl-none"
-                    }`}
-                  >
-                    {comment?.text || "No comment text available."}
+                  {!isCurrentUser && (
+                    <img
+                      src={icons.chatBot}
+                      alt="avatar"
+                      className="w-8 h-8 rounded-full self-start"
+                    />
+                  )}
+
+                  <div className="flex flex-col">
+                    <div
+                      className={`max-w-[75%] p-3 rounded-xl shadow-md ${
+                        isCurrentUser
+                          ? "bg-blue-100 text-blue-800 rounded-br-none self-end"
+                          : "bg-gray-100 text-gray-800 rounded-bl-none self-start"
+                      }`}
+                    >
+                      <div className="text-sm break-words">
+                        {comment?.text || "No comment text available."}
+                      </div>
+                    </div>
+
+                    <span
+                      className={`text-xs text-gray-400 mt-1 ${
+                        isCurrentUser
+                          ? "text-right self-end"
+                          : "text-left self-start"
+                      }`}
+                    >
+                      {isCurrentUser
+                        ? "You"
+                        : comment?.user?.username || "Anonymous"}{" "}
+                      •{" "}
+                      {new Date(
+                        comment?.createdAt || Date.now()
+                      ).toLocaleString()}
+                    </span>
                   </div>
+
+                  {isCurrentUser && (
+                    <img
+                      src={icons.chatBot}
+                      alt="avatar"
+                      className="w-8 h-8 rounded-full self-start"
+                    />
+                  )}
                 </div>
               );
             })
@@ -72,7 +108,6 @@ const CommentsModal = ({
           )}
         </div>
 
-        {/* Add Comment Input */}
         <div className="mt-4 flex gap-2 items-center">
           <input
             type="text"

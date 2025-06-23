@@ -10,7 +10,6 @@ const generateToken = (userId) => {
 const googleLogin = async (req, res) => {
   try {
     const { code } = req.query;
-
     if (!code) {
       return res
         .status(400)
@@ -29,20 +28,25 @@ const googleLogin = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      user = new User({ email, name });
+      user = new User({ email, username: name, password: "123456" });
       await user.save();
     }
 
     const token = generateToken(user._id);
+    const userInfo = {
+      _id: user._id,
+      email: user.email,
+      username: user.username,
+    };
 
     res.redirect(
-      `http://localhost:3000/oauth-success?token=${token}&name=${encodeURIComponent(
-        name
+      `http://localhost:3001/oauth-success?token=${token}&user=${encodeURIComponent(
+        JSON.stringify(userInfo)
       )}`
     );
   } catch (error) {
     console.error("Error during Google login:", error);
-    res.redirect(`http://localhost:3000/oauth-success?error=login_failed`);
+    res.redirect(`http://localhost:3001/oauth-success?error=${error}`);
   }
 };
 

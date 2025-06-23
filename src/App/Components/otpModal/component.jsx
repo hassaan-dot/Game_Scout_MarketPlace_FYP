@@ -8,7 +8,7 @@ const OTPModal = ({ visible, onClose, email }) => {
   const { mutate, isPending } = useOtpSubmit();
 
   const handleChangeText = (index, value) => {
-    if (value.length <= 1) {
+    if (value.length <= 1 && /^[0-9]*$/.test(value)) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
@@ -28,7 +28,7 @@ const OTPModal = ({ visible, onClose, email }) => {
   const handleSubmit = () => {
     const data = {
       otp: otp.join(""),
-      email: email,
+      email,
     };
     mutate(data);
   };
@@ -36,36 +36,34 @@ const OTPModal = ({ visible, onClose, email }) => {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-      <div className="bg-white w-max max-w-sm rounded-xl p-6 relative shadow-lg h-50">
+    <div className="fixed inset-0 bg-[#13131A] bg-opacity-90 flex items-center justify-center z-50">
+      <div className="bg-[#1E1E28] text-white rounded-2xl p-8 w-[90%] max-w-md text-center shadow-xl relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-xl font-bold"
+          className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold"
         >
-          ×
+          &times;
         </button>
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-red-600"
-        ></button>
 
-        <div className="flex  mb-4 flex-row justify-start items-start">
-          <img src={icons.OptIcon} alt="OTP Icon" className="w-14 h-14 " />
+        <div className="flex justify-center mb-4">
+          <img src={icons.OptIcon} alt="otp" className="w-12 h-12" />
         </div>
 
-        <p className="text-gray-800 text-center text-base font-medium mb-5">
-          Enter the OTP confirmation code sent to your email
+        <h2 className="text-lg font-semibold mb-1">Check your email</h2>
+        <p className="text-gray-400 text-sm mb-6">
+          Enter the verification code sent to <br />
+          <span className="text-white font-medium">{email}</span>
         </p>
 
-        <div className="flex gap-4 mb-6">
-          {otp?.map((digit, index) => (
+        <div className="flex justify-center gap-3 mb-5">
+          {otp.map((digit, index) => (
             <input
               key={index}
               ref={(ref) => (inputRefs.current[index] = ref)}
               type="text"
               inputMode="numeric"
               maxLength={1}
-              className="w-12 h-12 text-center border border-gray-300 rounded-md text-lg"
+              className="w-16 h-14 rounded-md border border-gray-600 bg-transparent text-white text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition p-5"
               value={digit}
               onChange={(e) => handleChangeText(index, e.target.value)}
               onKeyDown={(e) => handleKeyPress(e, index)}
@@ -73,14 +71,21 @@ const OTPModal = ({ visible, onClose, email }) => {
           ))}
         </div>
 
+        <p className="text-sm text-gray-400 mb-6">
+          Didn’t get a code?{" "}
+          <button className="text-blue-400 font-medium hover:underline">
+            resend
+          </button>
+        </p>
+
         <button
           onClick={handleSubmit}
-          className="bg-[#8C6DFD] text-white w-full py-2 rounded-lg font-medium flex justify-center items-center"
+          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 w-full rounded-lg font-semibold text-base"
         >
           {isPending ? (
-            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
           ) : (
-            "Submit"
+            "Verify email"
           )}
         </button>
       </div>

@@ -19,95 +19,87 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-router.get("/1", authenticateUser, async (req, res) => {
-  const userId = req.user.userId;
-
+router.get("/1", async (req, res) => {
   try {
-    const userPosts = await Post.find({ author: userId })
+    const allPosts = await Post.find()
       .sort({ createdAt: -1 })
+      .populate("author", "username email")
       .populate("comments.user", "username email");
 
     res.status(200).json({
-      message: "Posts fetched successfully",
-      posts: userPosts,
+      message: "All posts fetched successfully",
+      posts: allPosts,
     });
   } catch (error) {
-    console.error("Error fetching posts:", error);
+    console.error("Error fetching all posts:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.post(
-  "/new",
-  authenticateUser,
-  upload.single("picture"),
-  async (req, res) => {
-    const userId = req.user.userId;
-
-    try {
-      const { title, description, price } = req.body;
-      const picture = req.file ? req.file.filename : null;
-
-      console.log("Received Data:", { title, description, price, picture });
-
-      // Basic validation
-      if (!title || !description) {
-        return res
-          .status(400)
-          .json({ error: "Title and description are required" });
-      }
-
-      if (!picture) {
-        return res.status(400).json({ error: "Picture is required" });
-      }
-
-      // Optional price validation
-      if (price && isNaN(price)) {
-        return res.status(400).json({ error: "Price must be a valid number" });
-      }
-
-      // Check for duplicate post
-      const existingPost = await Post.findOne({ title, author: userId });
-      if (existingPost) {
-        return res
-          .status(409)
-          .json({ error: "Duplicate post detected! Failed" });
-      }
-
-      // Create and save new post
-      const newPost = new Post({
-        title,
-        description,
-        price,
-        picture,
-        author: userId,
-      });
-
-      await newPost.save();
-
-      res.status(201).json({
-        message: "Post created successfully",
-        post: {
-          _id: newPost._id,
-          title: newPost.title,
-          description: newPost.description,
-          price: newPost.price,
-          picture: newPost.picture,
-          author: newPost.author,
-          createdAt: newPost.createdAt,
-        },
-      });
-    } catch (error) {
-      console.error("Error creating post:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
+router.post("/new", upload.single("picture"), async (req, res) => {
+  if (!req.body || !req.body.userId) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: Token missing or invalid" });
   }
-);
+
+  try {
+    const { title, description, price, userId } = req.body;
+    const picture = req.file ? req.file.filename : null;
+
+    console.log("Received Data:", { title, description, price, picture });
+
+    if (!title || !description) {
+      return res
+        .status(400)
+        .json({ error: "Title and description are required" });
+    }
+
+    if (!picture) {
+      return res.status(400).json({ error: "Picture is required" });
+    }
+
+    if (price && isNaN(price)) {
+      return res.status(400).json({ error: "Price must be a valid number" });
+    }
+
+    const existingPost = await Post.findOne({ title, author: userId });
+    if (existingPost) {
+      return res.status(409).json({ error: "Duplicate post detected! Failed" });
+    }
+
+    const newPost = new Post({
+      title,
+      description,
+      price,
+      picture,
+      author: userId,
+    });
+
+    await newPost.save();
+
+    res.status(201).json({
+      message: "Post created successfully",
+      post: {
+        _id: newPost._id,
+        title: newPost.title,
+        description: newPost.description,
+        price: newPost.price,
+        picture: newPost.picture,
+        author: newPost.author,
+        createdAt: newPost.createdAt,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating post:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.put(
   "/update/:postId",
   authenticateUser,
-  upload.single("picture"), // Optional new picture
+  upload.single("picture"),
   async (req, res) => {
     const userId = req.user.userId;
     const { postId } = req.params;
@@ -129,7 +121,6 @@ router.put(
       if (price && isNaN(price)) {
         return res.status(400).json({ error: "Price must be a valid number" });
       }
-      // Update fields
       if (title) post.title = title;
       if (description) post.description = description;
       if (price) post.price = price;
@@ -158,9 +149,9 @@ router.put(
   }
 );
 
-router.delete("/delete/:postId", authenticateUser, async (req, res) => {
-  const userId = req.user.userId;
-  const { postId } = req.params;
+router.delete("/delete", async (req, res) => {
+  const { userId, postId } = req.body;
+  console.log("delete", userId, req.body);
 
   try {
     const post = await Post.findById(postId);
@@ -169,7 +160,6 @@ router.delete("/delete/:postId", authenticateUser, async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    // Check if the logged-in user is the author of the post
     if (post.author.toString() !== userId) {
       return res
         .status(403)
