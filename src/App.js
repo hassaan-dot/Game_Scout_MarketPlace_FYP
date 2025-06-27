@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Sidebar, Navbar } from "./App/Components/index";
 import {
-  CreateCampaign,
+  AllPosts,
   Home,
   CreatePosts,
   Profile,
@@ -37,7 +37,7 @@ const App = () => {
 
               <Route path="/Profile" element={<Profile />} />
 
-              <Route path="/create-campaign" element={<CreateCampaign />} />
+              <Route path="/UserPosts" element={<AllPosts />} />
             </>
           )}
 

@@ -12,26 +12,27 @@ export const navlinks = [
     name: "Home",
     imgUrl: dashboard,
     link: "/Home",
+    disabled: false,
   },
   {
     name: "campaign",
     imgUrl: createCampaign,
-    link: "/create-campaign",
-    disabled: true,
+    link: "/UserPosts",
+    disabled: false,
   },
   {
     name: "CreatePosts",
     imgUrl: payment,
     link: "/CreatePosts/:edit",
-    // disabled: true,
+    disabled: false,
   },
 
-  {
-    name: "withdraw",
-    imgUrl: withdraw,
-    // link: '/',
-    disabled: true,
-  },
+  // {
+  //   name: "withdraw",
+  //   imgUrl: withdraw,
+  //   // link: '/',
+  //   disabled: true,
+  // },
   {
     name: "Profile",
     imgUrl: profile,

@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useDeletePost, useGetAllPosts } from "../../../hooks/usePosts";
+import {
+  useDeletePost,
+  useGetAllPosts,
+  useGetAllUserPosts,
+} from "../../../hooks/usePosts";
 import LocalStorage from "../../../services/local-storage";
 import { useModalStore } from "../../../store/useModalStore";
 import PostCard from "../../Components/Posts/component";
@@ -13,10 +17,9 @@ const Profile = () => {
 
   const { mutate: deletePost, isPending: deletePending } = useDeletePost();
 
-  const { data, isPending } = useGetAllPosts();
+  const { data, isPending } = useGetAllUserPosts({ userId: User?._id });
 
   const onClickFunc = (id) => {
-    console.log("id", id);
     // data = {
     //   postId: id,
     //   userId: User?._id,
@@ -53,6 +56,8 @@ const Profile = () => {
               object={post}
               key={post._id}
               id={post._id}
+              showDel={true}
+              showEdit={true}
               comments={post?.comments}
               username={post?.author?.username || "Anonymous"}
               userAvatar=""

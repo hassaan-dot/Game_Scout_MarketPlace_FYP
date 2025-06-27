@@ -3,9 +3,14 @@ import { toast } from "react-toastify";
 import { api_post } from "../services/axios";
 import { useNavigate } from "react-router-dom";
 import { useModalStore } from "../store/useModalStore";
+import { data } from "autoprefixer";
 
 const handleGetAlLPosts = async (data) => {
   const res = await api_post.get("/1");
+  return res.data;
+};
+const handleGetAlLUserPosts = async (data) => {
+  const res = await api_post.get(`/userPosts/${data.userId}`);
   return res.data;
 };
 const handleCreatePost = async (data) => {
@@ -23,7 +28,7 @@ const handleUpdatePost = async ({ formData, id }) => {
   return res.data;
 };
 const handleAddCommentsPost = async (data) => {
-  const res = await api_post.post(`/comment/${data?.postId}`, data);
+  const res = await api_post.post(`/comment`, data);
   return res.data;
 };
 
@@ -31,6 +36,12 @@ export const useGetAllPosts = () => {
   return useQuery({
     queryKey: ["posts"],
     queryFn: () => handleGetAlLPosts(),
+  });
+};
+export const useGetAllUserPosts = (data) => {
+  return useQuery({
+    queryKey: ["userPost"],
+    queryFn: () => handleGetAlLUserPosts(data),
   });
 };
 
@@ -68,6 +79,9 @@ export const useUpdatePost = (id) => {
       queryPO.invalidateQueries({
         queryKey: ["posts"],
       });
+      queryPO.invalidateQueries({
+        queryKey: ["userPost"],
+      });
     },
     onError: (error) => {
       notify(error?.response?.data?.message);
@@ -86,7 +100,11 @@ export const useDeletePost = () => {
       queryPO.invalidateQueries({
         queryKey: ["posts"],
       });
+      queryPO.invalidateQueries({
+        queryKey: ["userPost"],
+      });
     },
+
     onError: (error) => {
       notify(error?.response?.data?.message);
     },
@@ -105,6 +123,9 @@ export const useAddComments = () => {
       setShowComments(true);
       queryPO.invalidateQueries({
         queryKey: ["posts"],
+      });
+      queryPO.invalidateQueries({
+        queryKey: ["userPost"],
       });
     },
     onError: (error) => {

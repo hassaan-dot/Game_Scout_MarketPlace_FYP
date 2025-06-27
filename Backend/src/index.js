@@ -8,12 +8,31 @@ import authRoutes from "./routes/authRoutes.js";
 import CreatePost from "./routes/createPost.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import googleLogin from "./routes/google-login.js";
+import { ZenRows } from "zenrows";
 
 dotenv.config();
 
 const app = express();
 
 const upload = multer({ dest: "uploads/" });
+
+// (async () => {
+//   const client = new ZenRows(
+//     process.env.ZENROWS_API_KEY || "3a502ef7cec8773b7ec218c62fd7269929645aba"
+//   );
+//   const url = "https://dlcompare.com";
+
+//   try {
+//     const response = await client.get(url);
+//     const data = response; // Correct way to access response content
+//     console.log("ZenRows success:", data);
+//   } catch (error) {
+//     console.error("ZenRows error:", error.message);
+//     if (error.response) {
+//       console.error("ZenRows response:", error.response.data);
+//     }
+//   }
+// })();
 
 const PORT = process.env.PORT || 3000;
 

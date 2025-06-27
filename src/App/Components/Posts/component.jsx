@@ -14,6 +14,8 @@ const PostCard = ({
   postImage,
   AuthorId,
   comments,
+  showEdit = false,
+  showDel = false,
   id,
 }) => {
   const { setEditData, setEditActive, editActive } = useModalStore();
@@ -32,13 +34,8 @@ const PostCard = ({
             />
             <span className="font-semibold text-white">{username}</span>
           </div>
-          {console.log(
-            "checking",
-            AuthorId === object?.author?._id,
-            AuthorId,
-            object?.author?._id
-          )}
-          {AuthorId === object?.author?._id && (
+
+          {AuthorId === object?.author?._id && showEdit && showDel && (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => {

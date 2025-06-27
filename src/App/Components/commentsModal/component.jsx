@@ -23,6 +23,7 @@ const CommentsModal = ({
     handleAddComments({
       postId: id,
       text: newComment.trim(),
+      userId: currentUserId,
     });
     setNewComment("");
   };
