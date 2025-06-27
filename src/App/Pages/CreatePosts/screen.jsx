@@ -8,7 +8,6 @@ import LocalStorage from "../../../services/local-storage";
 
 const CreatePost = () => {
   const User = LocalStorage.get("user");
-  console.log("user id", User?._id);
 
   const { mutate: createPost, isPending } = useCreatePost();
 
@@ -21,13 +20,12 @@ const CreatePost = () => {
   const { editData, editActive } = useModalStore();
 
   const fileInputRef = useRef(null);
-
   const [form, setForm] = useState(() => ({
     title: isEditMode && editData?.title ? editData.title : "",
     description:
       isEditMode && editData?.description ? editData.description : "",
     price: isEditMode && editData?.price ? editData.price : "",
-    userId: User?._id,
+    userId: editData ? editData.author?._id : User?._id,
     image:
       isEditMode && editData?.picture
         ? `http://localhost:3000/uploads/${editData.picture}`

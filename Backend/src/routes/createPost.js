@@ -3,7 +3,8 @@ import Post from "../models/createPost.js";
 import dotenv from "dotenv";
 import authenticateUser from "../middleWare/index.js";
 import multer from "multer";
-
+// import { json } from "body-parser";
+// import detectToxicComment from "../../aiModels/detectors/detector";
 dotenv.config();
 
 const router = express.Router();
@@ -46,8 +47,6 @@ router.post("/new", upload.single("picture"), async (req, res) => {
   try {
     const { title, description, price, userId } = req.body;
     const picture = req.file ? req.file.filename : null;
-
-    console.log("Received Data:", { title, description, price, picture });
 
     if (!title || !description) {
       return res
@@ -95,15 +94,38 @@ router.post("/new", upload.single("picture"), async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+router.get("/userPosts/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return res.status(400).json({
+      error: "User ID is required",
+    });
+  }
+
+  try {
+    const userPosts = await Post.find({ author: userId })
+      .sort({ createdAt: -1 })
+      .populate("author", "username email")
+      .populate("comments.user", "username email");
+
+    res.status(200).json({
+      message: "User's posts fetched successfully",
+      posts: userPosts,
+    });
+  } catch (error) {
+    console.error("Error fetching user's posts:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 router.put(
   "/update/:postId",
-  authenticateUser,
+
   upload.single("picture"),
   async (req, res) => {
-    const userId = req.user.userId;
     const { postId } = req.params;
-    const { title, description, price } = req.body;
+    const { title, description, price, userId } = req.body;
     const newPicture = req.file ? req.file.filename : null;
 
     try {
@@ -151,7 +173,6 @@ router.put(
 
 router.delete("/delete", async (req, res) => {
   const { userId, postId } = req.body;
-  console.log("delete", userId, req.body);
 
   try {
     const post = await Post.findById(postId);
@@ -175,10 +196,8 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
-router.post("/comment/:postId", authenticateUser, async (req, res) => {
-  const { postId } = req.params;
-  const userId = req.user.userId;
-  const { text } = req.body;
+router.post("/comment", async (req, res) => {
+  const { text, userId, postId } = req.body;
 
   if (!text) {
     return res.status(400).json({ error: "Comment text is required" });
@@ -209,5 +228,50 @@ router.post("/comment/:postId", authenticateUser, async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// router.post("/comment/:postId", authenticateUser, async (req, res) => {
+//   const { postId } = req.params;
+//   const userId = req.user.userId;
+//   const { text } = req.body;
+
+//   if (!text) {
+//     return res.status(400).json({ error: "Comment text is required" });
+//   }
+
+//   try {
+//     // ✅ Step 1: Run AI toxicity check
+//     const result = await detectToxicComment(text);
+//     const isToxic =
+//       result.score > 0.8 && result.label.toLowerCase().includes("toxic");
+
+//     if (isToxic) {
+//       return res.status(403).json({ error: "Toxic language is not allowed" });
+//     }
+
+//     // ✅ Step 2: Proceed with comment saving
+//     const post = await Post.findById(postId);
+
+//     if (!post) {
+//       return res.status(404).json({ error: "Post not found" });
+//     }
+
+//     const comment = {
+//       user: userId,
+//       text,
+//       createdAt: new Date(),
+//     };
+
+//     post.comments.push(comment);
+//     await post.save();
+
+//     res.status(201).json({
+//       message: "Comment added successfully",
+//       comments: post.comments,
+//     });
+//   } catch (error) {
+//     console.error("Error adding comment:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 export default router;
