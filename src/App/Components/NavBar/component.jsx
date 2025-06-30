@@ -71,15 +71,21 @@ const Navbar = () => {
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
+    setSearchingInput(query);
+
     if (query.length > 0) {
       const filtered = allCampaigns.filter((item) =>
         item.toLowerCase().includes(query.toLowerCase())
       );
       setSuggestions(filtered);
+
+      mutate();
     } else {
       setSuggestions(allCampaigns);
     }
+
     setShowSuggestions(true);
+    setIsSearching(true);
   };
 
   const handleFocus = (e) => {
@@ -91,6 +97,11 @@ const Navbar = () => {
 
     if (!data) return;
 
+    // if (isSearching) {
+    //   setSearchQuery(e.target.value);
+    //   setSearchingInput(e.target.value);
+    // }
+    // mutate();
     setSuggestions(allCampaigns);
 
     setShowSuggestions(true);
@@ -110,7 +121,7 @@ const Navbar = () => {
 
     setSearchIndex(1);
 
-    mutate(data);
+    mutate();
 
     setShowSuggestions(false);
   };
@@ -152,6 +163,7 @@ const Navbar = () => {
                 </button>
               </div>
             )}
+
             <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
               <img
                 src={search}

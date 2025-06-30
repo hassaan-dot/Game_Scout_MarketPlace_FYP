@@ -31,7 +31,7 @@ const Home = () => {
   const [detailView, setDetailView] = useState(false);
 
   const { mutate: searching } = useSearchBar();
-  console.log("detail Data", detailData);
+  // console.log("detail Data", detailData);
   useEffect(() => {
     mutate(1);
   }, [mutateVariable]);
@@ -44,6 +44,7 @@ const Home = () => {
     if (!isSearching && !searchingInput) {
       mutate(index);
     }
+
     const data = {
       input: searchingInput,
     };
