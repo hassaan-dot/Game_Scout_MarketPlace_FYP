@@ -68,26 +68,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
-{"web":{"client_id":"80208212623-adf9mq5fqb91ck26vbp8r8mk6jasqggt.apps.googleusercontent.com","project_id":"glowing-harmony-461523-b4","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","javascript_origins":["http://localhost:3000"]}}
-
-/Backend/.env
-
-{PORT=3000
-
-MONGO_URI=mongodb+srv://mshaheern437:jZ8cL85EmhS6eagi@cluster0.t4vfdba.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-
-OPENAI_API_KEY=sk-proj-b-2b5MPujW1kY999wo-sIe00U87gRYpWpSq37Xs107K7ciZ7sNKS-vv-L2vsJXRgFM-S5zV\_\_RT3BlbkFJWxMA54sK-5OxxZw0AV725tZ1d_bcOupQIBsTQj6UKkFeEyH8gNOYxGVFSvfoNCrM4D-3wTTH0A
-
-OPENROUTER_API_KEY=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
-
-GOOGLE_CLIENT_ID="80208212623-adf9mq5fqb91ck26vbp8r8mk6jasqggt.apps.googleusercontent.com"
-
-GOOGLE_CLIENT_SECRET="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"
-
-JWT_SECRET=granjur}
-
-cd ..
-{
-API_URL='localhost:3000/api/auth'
-}
