@@ -1,13 +1,23 @@
 import express from "express";
 import Post from "../models/createPost.js";
 import dotenv from "dotenv";
-import authenticateUser from "../middleWare/index.js";
+// import authenticateUser from "../middleWare/index.js";
 import multer from "multer";
+// import tf from "@tensorflow/tfjs-node";
+// import path from "path";
 // import { json } from "body-parser";
 // import detectToxicComment from "../../aiModels/detectors/detector";
 dotenv.config();
 
 const router = express.Router();
+
+// const loadModel = async () => {
+//   const modelPath = path.resolve("aiModels/toxicdetector/model.json");
+//   model = await tf.loadLayersModel(`file://${modelPath}`);
+//   console.log("✅ Model loaded");
+// };
+
+// loadModel();
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -18,6 +28,7 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
+
 const upload = multer({ storage });
 
 router.get("/1", async (req, res) => {
@@ -196,61 +207,37 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
-router.post("/comment", async (req, res) => {
-  const { text, userId, postId } = req.body;
-
-  if (!text) {
-    return res.status(400).json({ error: "Comment text is required" });
-  }
-
-  try {
-    const post = await Post.findById(postId);
-
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
-    }
-
-    const comment = {
-      user: userId,
-      text,
-      createdAt: new Date(),
-    };
-    post.comments.push(comment);
-
-    await post.save();
-
-    res.status(201).json({
-      message: "Comment added successfully",
-      comments: post.comments,
-    });
-  } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// router.post("/comment/:postId", authenticateUser, async (req, res) => {
-//   const { postId } = req.params;
-//   const userId = req.user.userId;
-//   const { text } = req.body;
+// router.post("/comment", async (req, res) => {
+//   const { text, userId, postId } = req.body;
 
 //   if (!text) {
 //     return res.status(400).json({ error: "Comment text is required" });
 //   }
 
 //   try {
-//     // ✅ Step 1: Run AI toxicity check
-//     const result = await detectToxicComment(text);
-//     const isToxic =
-//       result.score > 0.8 && result.label.toLowerCase().includes("toxic");
+//     const maxLen = 20;
+//     const vocab = { good: 1, bad: 2, toxic: 3, nice: 4 };
+//     const tokens = text
+//       .toLowerCase()
+//       .split(" ")
+//       .map((word) => vocab[word] || 0);
+
+//     const padded = Array.from({ length: maxLen }, (_, i) => tokens[i] || 0);
+
+//     const inputTensor = tf.tensor2d([padded]);
+
+//     const prediction = model.predict(inputTensor);
+//     const result = await prediction.data();
+
+//     console.log("Prediction Result:", result);
+
+//     const isToxic = result[0] > 0.5;
 
 //     if (isToxic) {
-//       return res.status(403).json({ error: "Toxic language is not allowed" });
+//       return res.status(403).json({ error: "Toxic comment not allowed" });
 //     }
 
-//     // ✅ Step 2: Proceed with comment saving
 //     const post = await Post.findById(postId);
-
 //     if (!post) {
 //       return res.status(404).json({ error: "Post not found" });
 //     }

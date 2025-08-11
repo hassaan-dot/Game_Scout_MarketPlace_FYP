@@ -8,7 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import CreatePost from "./routes/createPost.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import googleLogin from "./routes/google-login.js";
-import { ZenRows } from "zenrows";
+// import { ZenRows } from "zenrows";
 
 dotenv.config();
 

@@ -61,13 +61,13 @@ const Navbar = () => {
     () => ["Lowest Price", "High Ratings", "Ps5", "Discounted", "Ps4"],
     []
   );
-  const tabs = [
+  const tabs = useMemo(() => [
     { label: "ALL", value: "ALL", icon: <FaDashcube /> },
     { label: "Xbox", value: "Xbox", icon: <FaXbox /> },
     { label: "PS4", value: "ps4", icon: <FaPlaystation /> },
     { label: "PC", value: "pc", icon: <FaWindows /> },
     { label: "Switch", value: "switch", icon: <FaGamepad /> },
-  ];
+  ]);
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -138,11 +138,11 @@ const Navbar = () => {
     <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
       <div ref={searchRef} className=" lg:flex-1 flex flex-col max-w-[458px]">
         {searchBarActive && (
-          <div className="flex flex-row py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px]">
+          <div className="flex flex-row py-2 pl-4 pr-2 h-[52px] bg-[#1c1c24] rounded-[100px] mt-1">
             <input
               type="text"
               placeholder="Search for games"
-              className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
+              className="flex w-full font-epilogue font-normal text-xs text-[14px] placeholder:text-[#4b5264] text-white bg-transparent outline-none"
               value={searchQuery}
               onChange={handleSearchChange}
               onFocus={(e) => handleFocus(e)}
@@ -164,11 +164,11 @@ const Navbar = () => {
               </div>
             )}
 
-            <div className="w-[72px] h-full rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
+            <div className="px-6 py-0 rounded-[20px] bg-[#4acd8d] flex justify-center items-center cursor-pointer">
               <img
                 src={search}
                 alt="search"
-                className="w-[15px] h-[15px] object-contain"
+                className="w-[11px] h-[11px] object-contain"
               />
             </div>
           </div>
@@ -182,7 +182,7 @@ const Navbar = () => {
                 onClick={() => {
                   handleSuggestionClick(item);
                 }}
-                className="flex-shrink-0 bg-[#4acd8d] text-[#0f0f10] font-semibold rounded-full px-4 py-1 text-sm hover:bg-[#36b16a] transition"
+                className="flex-shrink-0 bg-[#4acd8d] text-[#0f0f10] text-xs font-semibold rounded-full px-4 py-1 text-sm hover:bg-[#36b16a] transition"
               >
                 {item}
               </button>
@@ -192,7 +192,7 @@ const Navbar = () => {
       </div>
       {tabBarActive && (
         <div className="relative mt-1 w-[450px] mx-auto">
-          <div className="flex space-x-3 overflow-x-auto rounded-3xl scrollbar-hide bg-[#1c1c24] px-6 py-1 ">
+          <div className="flex space-x-3 overflow-x-auto rounded-3xl scrollbar-hide bg-[#1c1c24] px-6 py-0 mt-1 ">
             {tabs.map(({ label, value, icon }) => (
               <div
                 key={value}
@@ -210,10 +210,10 @@ const Navbar = () => {
                       setIsActive(value);
                     }
                   }}
-                  className={`flex items-center gap-2 px-4 py-1 rounded-full text-sm font-semibold transition ${
+                  className={`flex items-center gap-2 px-4 py-1 rounded-full font-semibold transition ${
                     isActive === value
-                      ? "bg-[#4acd8d] text-[#0f0f10]"
-                      : "bg-transparent text-white hover:bg-[#4acd8d] hover:text-[#0f0f10]"
+                      ? "bg-[#4acd8d] text-[#0f0f10] text-sm"
+                      : "bg-transparent text-white hover:bg-[#4acd8d] hover:text-[#0f0f10] text-xs"
                   }`}
                 >
                   <span className="text-base">{icon}</span>
@@ -318,7 +318,7 @@ const Navbar = () => {
             setToken("");
             notify("SignOut Successfully");
           }}
-          className="text-white text-sm bg-red-500 hover:bg-red-600 px-5 py-2 rounded-md transition"
+          className="text-white text-xs bg-red-500 hover:bg-red-600 px-5 py-2 rounded-md transition"
         >
           Sign Out
         </button>
