@@ -7,7 +7,6 @@ import { useModalStore } from "../store/useModalStore";
 import { useNavigate } from "react-router-dom";
 
 const handleLogin = async (data) => {
-  console.log("123", data);
   const res = await api.post("/send-otp", data);
   return res.data;
 };
@@ -69,8 +68,9 @@ export const useLogin = () => {
   return useMutation({
     mutationKey: ["login"],
     mutationFn: (data) => handleLogin(data),
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       setOtpModalVisible(true);
+
       notify("OTP sent to your email");
     },
     onError: (error) => {

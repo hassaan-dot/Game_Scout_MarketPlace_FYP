@@ -68,6 +68,11 @@ const Navbar = () => {
     { label: "PC", value: "pc", icon: <FaWindows /> },
     { label: "Switch", value: "switch", icon: <FaGamepad /> },
   ]);
+
+  // useEffect(() => {
+  //   document.title = searchingInput;
+  // }, [searchingInput]);
+
   const handleSearchChange = (e) => {
     const query = e.target.value;
     setSearchQuery(query);

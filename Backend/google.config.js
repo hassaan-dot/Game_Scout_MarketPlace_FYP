@@ -9,7 +9,7 @@ const googleClientSecret =
 const authenticateGoogle = new google.auth.OAuth2(
   googleClientId,
   googleClientSecret,
-  "http://localhost:3000/api/auth/googlelogin" //
+  "http://localhost:3000/api/auth/googlelogin"
 );
 
 export { authenticateGoogle };

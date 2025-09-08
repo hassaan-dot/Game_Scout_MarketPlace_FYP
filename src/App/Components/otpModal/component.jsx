@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useOtpSubmit } from "../../../hooks/useLogin";
+import { useOtpSubmit } from "../../../hooks/useLogin.js";
 import { icons } from "../../Resources/Icons/icons.js";
 
 const OTPModal = ({ visible, onClose, email }) => {
@@ -36,8 +36,8 @@ const OTPModal = ({ visible, onClose, email }) => {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 bg-[#13131A] bg-opacity-90 flex items-center justify-center z-50">
-      <div className="bg-[#1E1E28] text-white rounded-2xl p-8 w-[90%] max-w-md text-center shadow-xl relative">
+    <div className="fixed inset-0 bg-[#13131A] bg-opacity-90 flex items-center justify-center z-50 py-8 px-10 ">
+      <div className="bg-[#1E1E28] text-white rounded-2xl w-[90%] max-w-[40%] text-center shadow-xl relative py-5 mx-auto px-8 ">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-red-500 text-2xl font-bold"
@@ -63,7 +63,7 @@ const OTPModal = ({ visible, onClose, email }) => {
               type="text"
               inputMode="numeric"
               maxLength={1}
-              className="w-16 h-14 rounded-md border border-gray-600 bg-transparent text-white text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition p-5"
+              className="w-14 h-12 rounded-md border border-gray-600 bg-transparent text-white text-center text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition p-5"
               value={digit}
               onChange={(e) => handleChangeText(index, e.target.value)}
               onKeyDown={(e) => handleKeyPress(e, index)}
@@ -71,19 +71,19 @@ const OTPModal = ({ visible, onClose, email }) => {
           ))}
         </div>
 
-        <p className="text-sm text-gray-400 mb-6">
+        <p className="text-sm text-gray-400 mb-3">
           Didn’t get a code?{" "}
-          <button className="text-blue-400 font-medium hover:underline">
+          <button className="text-blue-400 font-medium hover:underline text-sm">
             resend
           </button>
         </p>
 
         <button
           onClick={handleSubmit}
-          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 w-full rounded-lg font-semibold text-base"
+          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-2 w-full text-sm rounded-lg font-semibold text-base"
         >
           {isPending ? (
-            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto " />
           ) : (
             "Verify email"
           )}

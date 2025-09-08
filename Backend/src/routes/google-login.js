@@ -9,6 +9,7 @@ const generateToken = (userId) => {
 
 const googleLogin = async (req, res) => {
   try {
+    console.log("Google login code", code);
     const { code } = req.query;
     if (!code) {
       return res
@@ -22,6 +23,8 @@ const googleLogin = async (req, res) => {
     const userRes = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${tokens.access_token}`
     );
+
+    console.log("in google login", userRes.data);
 
     const { email, name } = userRes.data;
 

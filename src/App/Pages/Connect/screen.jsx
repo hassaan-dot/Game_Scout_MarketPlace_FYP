@@ -7,8 +7,8 @@ import { useModalStore } from "../../../store/useModalStore.js";
 import OTPModal from "../../Components/otpModal/component.jsx";
 
 const LoginPage = () => {
-  const { mutate: handleUserLogin } = useLogin();
-  const { mutate: handleUserSignUp, isPending } = useSignup();
+  const { mutate: handleUserLogin, isPending: LoginPending } = useLogin();
+  const { mutate: handleUserSignUp, isPending: SignupPending } = useSignup();
 
   const { IsRegister, setIsRegister, setOtpModalVisible, otpModalVisible } =
     useModalStore();
@@ -176,10 +176,11 @@ const LoginPage = () => {
                 <button
                   type="submit"
                   onClick={Connect}
+                  disabled={LoginPending || SignupPending}
                   className="m2-4 bg-[#8C6DFD] text-white py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center"
                 >
                   {IsRegister ? "Sign Up" : "Login"}
-                  {isPending && (
+                  {(SignupPending || LoginPending) && (
                     <ClipLoader
                       color="#fff"
                       loading={true}
